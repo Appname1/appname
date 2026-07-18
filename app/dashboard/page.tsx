@@ -41,7 +41,7 @@ export default async function DashboardPage() {
           <p className="text-[#6B6A66] mb-8">
             {activeProject
               ? 'Pick up where you left off.'
-              : "Let&apos;s build something you can show off."}
+              : 'Let\'s build something you can show off.'}
           </p>
 
           {activeProject ? (
