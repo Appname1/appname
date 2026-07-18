@@ -41,7 +41,7 @@ export default async function DashboardPage() {
           <p className="text-[#6B6A66] mb-8">
             {activeProject
               ? 'Pick up where you left off.'
-              : "Let's build something you can show off."}
+              : "Let&apos;s build something you can show off."}
           </p>
 
           {activeProject ? (
@@ -59,7 +59,7 @@ export default async function DashboardPage() {
           ) : (
             <div className="bg-white border border-[#E4E2DA] rounded-xl p-10 text-center mb-10">
               <p className="text-[#6B6A66] mb-5">
-                You don't have an active project yet — no pressure, let's find one that fits.
+                You don&apos;t have an active project yet — no pressure, let&apos;s find one that fits.
               </p>
               <button className="bg-[#141312] text-[#FAF9F6] text-sm font-medium rounded-lg px-5 py-2.5">
                 Start New Project
