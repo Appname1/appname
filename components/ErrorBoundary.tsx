@@ -31,7 +31,7 @@ export default class ErrorBoundary extends Component<Props, State> {
               Something went wrong
             </h2>
             <p className="text-[#6B6A66] mb-6">
-              We've logged the issue and we're looking into it. Try refreshing the page.
+              We&apos;ve logged the issue and we&apos;re looking into it. Try refreshing the page.
             </p>
             <button
               onClick={() => this.setState({ hasError: false })}
