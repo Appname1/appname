@@ -60,7 +60,9 @@ Exact JSON structure:
 
 Code rules: industry quality, real pandas/sklearn/matplotlib, executable in Google Colab.
 
-beginner_breakdown: explicit for loops ONLY. No list comprehensions. No lambda. No map(). No filter(). Explain every variable name in plain English.
+CODE RULE (applies to the "code" field itself, not just the explanation): when the logic involves iterating, filtering, or transforming data manually, write it using explicit for loops — NOT list comprehensions, lambda, map(), or filter(). This applies even when list comprehensions would be more idiomatic. Standard library/pandas/sklearn one-liners (e.g. train_test_split, model.fit, df.groupby) are fine as-is since they aren't manual iteration.
+
+beginner_breakdown: describe the explicit for-loop logic in plain English, explaining every variable name.
 
 explanation: maximum 3 plain English sentences.
 
