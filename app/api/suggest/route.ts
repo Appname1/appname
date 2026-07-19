@@ -51,23 +51,22 @@ export async function POST(request: Request) {
 
     // X-Test header: return mock data instantly, no API call
     if (request.headers.get('X-Test') === 'true') {
-      return NextResponse.json({
-        suggestions: [
-          {
-            title: 'Mock Project 1',
-            domain: 'DA',
-            relevancy_score: 90,
-            why_relevant: 'Mock reason for testing.',
-            tech_stack: ['Python', 'SQL'],
-            difficulty: 'BEGINNER',
-            is_case_study: false,
-            datasets: [
-              { name: 'Mock Dataset 1', url: 'https://www.kaggle.com/datasets/mock1', why_suitable: 'Mock' },
-              { name: 'Mock Dataset 2', url: 'https://www.kaggle.com/datasets/mock2', why_suitable: 'Mock' },
-              { name: 'Mock Dataset 3', url: 'https://www.kaggle.com/datasets/mock3', why_suitable: 'Mock' },
-            ],
-          },
+      const mockSuggestion = (n: number) => ({
+        title: `Mock Project ${n}`,
+        domain: 'DA',
+        relevancy_score: 90,
+        why_relevant: 'Mock reason for testing.',
+        tech_stack: ['Python', 'SQL'],
+        difficulty: 'BEGINNER',
+        is_case_study: false,
+        datasets: [
+          { name: 'Mock Dataset 1', url: 'https://www.kaggle.com/datasets/mock1', why_suitable: 'Mock' },
+          { name: 'Mock Dataset 2', url: 'https://www.kaggle.com/datasets/mock2', why_suitable: 'Mock' },
+          { name: 'Mock Dataset 3', url: 'https://www.kaggle.com/datasets/mock3', why_suitable: 'Mock' },
         ],
+      })
+      return NextResponse.json({
+        suggestions: [mockSuggestion(1), mockSuggestion(2), mockSuggestion(3)],
       })
     }
 
