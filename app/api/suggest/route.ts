@@ -120,7 +120,7 @@ export async function POST(request: Request) {
     }
 
     return NextResponse.json(parsed)
-  } catch (err) {
+  } catch {
     return NextResponse.json({ error: 'suggestion_failed', retry: true }, { status: 500 })
   }
 }
