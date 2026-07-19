@@ -73,7 +73,7 @@ export default function TestGeneratePage() {
         <option value="CONFIDENT">CONFIDENT</option>
       </select>
 
-      <label className="flex items-center gap-2 mb-4">
+      <label className="flex items-center gap-2 mb-4 text-black">
         <input type="checkbox" checked={isCaseStudy} onChange={(e) => setIsCaseStudy(e.target.checked)} />
         Is Case Study
       </label>
