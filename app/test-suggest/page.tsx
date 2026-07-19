@@ -24,7 +24,7 @@ export default function TestSuggestPage() {
   }
 
   return (
-    <div className="p-8 max-w-3xl mx-auto">
+    <div className="p-8 max-w-3xl mx-auto text-black">
       <h1 className="text-xl font-bold mb-4">Test /api/suggest</h1>
       <textarea
         className="w-full border p-2 mb-2 h-32"
