@@ -3,7 +3,9 @@ import localFont from "next/font/local";
 import { Space_Grotesk } from "next/font/google";
 import * as Sentry from '@sentry/nextjs';
 import ErrorBoundary from "@/components/ErrorBoundary";
+import { ThemeProvider } from "@/components/ThemeProvider";
 import "./globals.css";
+
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -41,7 +43,10 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${spaceGrotesk.variable} antialiased`}
       >
-        <ErrorBoundary>{children}</ErrorBoundary>
+        <ThemeProvider>
+         <ErrorBoundary>{children}</ErrorBoundary>
+        </ThemeProvider>
+
       </body>
     </html>
   );

@@ -4,10 +4,20 @@
 
 :root {
   --paper: #FAF9F6;
+  --canvas: #EDEBE3;
   --ink: #141312;
-  --muted: #6B6A66;
+  --muted: #6b6a66;
   --border: #E4E2DA;
+  --white: #FFFFFF;
+  --tag-bg: #F0EDE6;
+  --on-ink: #EDEBE3;
   --accent: #B8860B;
+  --accent-dark: #412402;
+  --accent-bg: #FAEEDA;
+  --green: #2C4A3E;
+  --green-dark: #173404;
+  --green-bg: #EAF3DE;
+  --green-border: #C0DD97;
 }
 
 body {
