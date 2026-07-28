@@ -139,7 +139,7 @@ export default function JdEntryPage() {
 
         {showSkillPanel && (
           <div
-            className="rounded-2xl p-6 mt-6 border"
+            className="rounded-2xl p-6 mt-6 border animate-slide-in"
             style={{ background: 'var(--white)', borderColor: 'var(--border)' }}
           >
             <h2 className="text-base font-semibold mb-1" style={{ color: 'var(--ink)' }}>
