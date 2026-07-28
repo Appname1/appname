@@ -22,88 +22,109 @@ export default async function DashboardPage() {
     .eq('user_id', authUser!.id)
     .order('created_at', { ascending: false })
 
-  const activeProject = projects?.[0] // simplest "most recent" definition for now
+  const activeProject = projects?.[0]
   const displayName = profile?.name?.split(' ')[0] || 'there'
 
   return (
-    <div className="min-h-screen bg-[#FAF9F6]">
+    <div className="min-h-screen" style={{ background: 'var(--paper)' }}>
       <Navbar
         creditBalance={profile?.credit_balance ?? 0}
         userName={profile?.name ?? ''}
       />
 
       <div className="max-w-6xl mx-auto px-6 py-10 grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-10">
-        {/* MAIN AREA */}
         <div>
-          <h1 className="text-2xl font-bold text-[#141312] mb-1">
+          <h1 className="text-2xl font-bold mb-1" style={{ color: 'var(--ink)' }}>
             Hi {displayName},
           </h1>
-          <p className="text-[#6B6A66] mb-8">
+          <p className="mb-8" style={{ color: 'var(--muted)' }}>
             {activeProject
               ? 'Pick up where you left off.'
-              : 'Let\'s build something you can show off.'}
+              : "Let&apos;s build something you can show off."}
           </p>
 
           {activeProject ? (
-            <div className="bg-white border border-[#E4E2DA] rounded-xl p-6 mb-10">
-              <span className="inline-block text-xs font-semibold text-[#B8860B] bg-[#B8860B]/10 rounded-full px-2.5 py-1 mb-3">
+            <div
+              className="rounded-xl p-6 mb-10 border"
+              style={{ background: 'var(--white)', borderColor: 'var(--border)' }}
+            >
+              <span
+                className="inline-block text-xs font-semibold rounded-full px-2.5 py-1 mb-3"
+                style={{ color: 'var(--accent)', background: 'var(--accent-bg)' }}
+              >
                 {activeProject.domain}
               </span>
-              <h2 className="text-xl font-bold text-[#141312] mb-4">
+              <h2 className="text-xl font-bold mb-4" style={{ color: 'var(--ink)' }}>
                 {activeProject.project_json?.project_title || 'Untitled project'}
               </h2>
-              <button className="bg-[#141312] text-[#FAF9F6] text-sm font-medium rounded-lg px-5 py-2.5">
+              <button
+                className="text-sm font-medium rounded-lg px-5 py-2.5"
+                style={{ background: 'var(--ink)', color: 'var(--paper)' }}
+              >
                 Continue
               </button>
             </div>
           ) : (
-            <div className="bg-white border border-[#E4E2DA] rounded-xl p-10 text-center mb-10">
-              <p className="text-[#6B6A66] mb-5">
+            <div
+              className="rounded-xl p-10 text-center mb-10 border"
+              style={{ background: 'var(--white)', borderColor: 'var(--border)' }}
+            >
+              <p className="mb-5" style={{ color: 'var(--muted)' }}>
                 You don&apos;t have an active project yet — no pressure, let&apos;s find one that fits.
               </p>
-              <button className="bg-[#141312] text-[#FAF9F6] text-sm font-medium rounded-lg px-5 py-2.5">
+              <button
+                className="text-sm font-medium rounded-lg px-5 py-2.5"
+                style={{ background: 'var(--ink)', color: 'var(--paper)' }}
+              >
                 Start New Project
               </button>
             </div>
           )}
 
-          {/* Projects grid */}
-          <h3 className="text-sm font-semibold text-[#6B6A66] uppercase tracking-wide mb-4">
+          <h3
+            className="text-sm font-semibold uppercase tracking-wide mb-4"
+            style={{ color: 'var(--muted)' }}
+          >
             My Projects
           </h3>
           {projects && projects.length > 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {projects.map((p) => (
-                <div key={p.id} className="bg-white border border-[#E4E2DA] rounded-lg p-4">
-                  <span className="text-xs font-semibold text-[#B8860B]">{p.domain}</span>
-                  <p className="text-sm font-medium text-[#141312] mt-1">
+                <div
+                  key={p.id}
+                  className="rounded-lg p-4 border"
+                  style={{ background: 'var(--white)', borderColor: 'var(--border)' }}
+                >
+                  <span className="text-xs font-semibold" style={{ color: 'var(--accent)' }}>
+                    {p.domain}
+                  </span>
+                  <p className="text-sm font-medium mt-1" style={{ color: 'var(--ink)' }}>
                     {p.project_json?.project_title || 'Untitled project'}
                   </p>
                 </div>
               ))}
             </div>
           ) : (
-            <p className="text-sm text-[#6B6A66]">
+            <p className="text-sm" style={{ color: 'var(--muted)' }}>
               Nothing here yet — your first project will show up once you build one.
             </p>
           )}
         </div>
 
-        {/* SIDEBAR */}
         <div className="space-y-6">
-          <div className="bg-white border border-[#E4E2DA] rounded-xl p-5">
-            <p className="text-xs text-[#6B6A66] mb-1">Credit balance</p>
-            <p className="text-3xl font-bold text-[#141312]">
+          <div className="rounded-xl p-5 border" style={{ background: 'var(--white)', borderColor: 'var(--border)' }}>
+            <p className="text-xs mb-1" style={{ color: 'var(--muted)' }}>Credit balance</p>
+            <p className="text-3xl font-bold" style={{ color: 'var(--ink)' }}>
               {profile?.credit_balance ?? 0}
             </p>
-            <a href="/credits/topup" className="text-xs text-[#B8860B] font-medium">
+            <a href="/credits/topup" className="text-xs font-medium" style={{ color: 'var(--accent)' }}>
               Top up →
             </a>
           </div>
 
-          <div className="bg-white border border-[#E4E2DA] rounded-xl p-5">
-            <p className="text-xs text-[#6B6A66] mb-3">Stats</p>
-            <div className="space-y-2 text-sm text-[#141312]">
+          <div className="rounded-xl p-5 border" style={{ background: 'var(--white)', borderColor: 'var(--border)' }}>
+            <p className="text-xs mb-3" style={{ color: 'var(--muted)' }}>Stats</p>
+            <div className="space-y-2 text-sm" style={{ color: 'var(--ink)' }}>
               <div className="flex justify-between">
                 <span>Projects completed</span>
                 <span className="font-medium">{profile?.total_projects_completed ?? 0}</span>
