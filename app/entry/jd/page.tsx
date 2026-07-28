@@ -97,7 +97,7 @@ export default function JdEntryPage() {
           <div
             className="flex transition-transform duration-300 ease-out"
             style={{
-              transform: step === 'jd' ? 'translateX(0%)' : 'translateX(-100%)',
+              transform: step === 'jd' ? 'translateX(0%)' : 'translateX(-50%)',
               width: '200%',
             }}
           >
