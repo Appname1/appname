@@ -39,7 +39,7 @@ const SKILL_CATEGORIES = {
 export default function JdEntryPage() {
   const router = useRouter()
   const [jd, setJd] = useState('')
-  const [showSkillPanel, setShowSkillPanel] = useState(false)
+  const [step, setStep] = useState<'jd' | 'skills'>('jd')
   const [selectedSkills, setSelectedSkills] = useState<string[]>([])
   const [apiResult, setApiResult] = useState<unknown>(null)
   const [apiDone, setApiDone] = useState(false)
@@ -54,7 +54,7 @@ export default function JdEntryPage() {
   const handleAnalyse = () => {
     if (!jd.trim()) return
 
-    setShowSkillPanel(true) // show instantly, don't wait on the API
+    setStep('skills') // slide to the next screen instantly, don't wait on the API
 
     fetch('/api/suggest', {
       method: 'POST',
@@ -79,10 +79,8 @@ export default function JdEntryPage() {
       sessionStorage.setItem('entry_jd', jd)
       router.push('/suggestions')
     }
-    // If not apiDone yet, the effect below will navigate once it lands
   }
 
-  // Once the API finishes AFTER Continue was already clicked, navigate then
   if (apiDone && continueClicked && typeof window !== 'undefined') {
     const alreadyStored = sessionStorage.getItem('suggestions')
     if (!alreadyStored) {
@@ -93,101 +91,122 @@ export default function JdEntryPage() {
   }
 
   return (
-    <div className="min-h-screen" style={{ background: 'var(--paper)' }}>
+    <div className="min-h-screen overflow-hidden" style={{ background: 'var(--paper)' }}>
       <div className="max-w-4xl mx-auto px-6 py-16">
-        <h1
-          className="text-2xl font-bold mb-2"
-          style={{ color: 'var(--ink)', fontFamily: 'var(--font-space-grotesk)' }}
-        >
-          Paste the job description
-        </h1>
-        <p className="text-sm mb-8" style={{ color: 'var(--muted)' }}>
-          The more detail, the better the project fits. Or try a sample below.
-        </p>
-
-        <textarea
-          value={jd}
-          onChange={(e) => setJd(e.target.value)}
-          placeholder="Paste the full job description here..."
-          className="w-full h-48 rounded-xl p-4 text-sm border mb-4"
-          style={{ borderColor: 'var(--border)', background: 'var(--white)', color: 'var(--ink)' }}
-        />
-
-        <div className="flex flex-wrap gap-2 mb-6">
-          {Object.keys(SAMPLE_JDS).map((role) => (
-            <button
-              key={role}
-              onClick={() => setJd(SAMPLE_JDS[role])}
-              className="text-xs font-medium rounded-full px-3 py-1.5 border"
-              style={{ borderColor: 'var(--border)', color: 'var(--muted)', background: 'var(--white)' }}
-            >
-              Try: {role}
-            </button>
-          ))}
-        </div>
-
-        {!showSkillPanel && (
-          <button
-            onClick={handleAnalyse}
-            disabled={!jd.trim()}
-            className="text-sm font-medium rounded-lg px-6 py-3 disabled:opacity-40"
-            style={{ background: 'var(--ink)', color: 'var(--paper)' }}
-          >
-            Analyse this JD
-          </button>
-        )}
-
-        {showSkillPanel && (
+        <div className="relative overflow-hidden">
           <div
-            className="rounded-2xl p-6 mt-6 border animate-slide-in"
-            style={{ background: 'var(--white)', borderColor: 'var(--border)' }}
+            className="flex transition-transform duration-300 ease-out"
+            style={{
+              transform: step === 'jd' ? 'translateX(0%)' : 'translateX(-100%)',
+              width: '200%',
+            }}
           >
-            <h2 className="text-base font-semibold mb-1" style={{ color: 'var(--ink)' }}>
-              While we read your JD, pick the skills you want to use
-            </h2>
-            <p className="text-xs mb-6" style={{ color: 'var(--muted)' }}>
-              Choose at least one to continue.
-            </p>
+            {/* Screen 1: JD input */}
+            <div style={{ width: '50%' }} className="pr-4">
+              <h1
+                className="text-2xl font-bold mb-2"
+                style={{ color: 'var(--ink)', fontFamily: 'var(--font-space-grotesk)' }}
+              >
+                Paste the job description
+              </h1>
+              <p className="text-sm mb-8" style={{ color: 'var(--muted)' }}>
+                The more detail, the better the project fits. Or try a sample below.
+              </p>
 
-            <div className="grid sm:grid-cols-2 gap-6 mb-6">
-              {Object.entries(SKILL_CATEGORIES).map(([category, skills]) => (
-                <div key={category}>
-                  <p className="text-xs font-semibold uppercase tracking-wide mb-2" style={{ color: 'var(--muted)' }}>
-                    {category}
-                  </p>
-                  <div className="flex flex-wrap gap-2">
-                    {skills.map((skill) => {
-                      const selected = selectedSkills.includes(skill)
-                      return (
-                        <button
-                          key={skill}
-                          onClick={() => toggleSkill(skill)}
-                          className="text-xs font-medium rounded-full px-3 py-1.5 border transition-colors"
-                          style={{
-                            borderColor: selected ? 'var(--accent)' : 'var(--border)',
-                            background: selected ? 'var(--accent-bg)' : 'var(--white)',
-                            color: selected ? 'var(--accent-dark)' : 'var(--ink)',
-                          }}
-                        >
-                          {skill}
-                        </button>
-                      )
-                    })}
-                  </div>
-                </div>
-              ))}
+              <textarea
+                value={jd}
+                onChange={(e) => setJd(e.target.value)}
+                placeholder="Paste the full job description here..."
+                className="w-full h-48 rounded-xl p-4 text-sm border mb-4"
+                style={{ borderColor: 'var(--border)', background: 'var(--white)', color: 'var(--ink)' }}
+              />
+
+              <div className="flex flex-wrap gap-2 mb-6">
+                {Object.keys(SAMPLE_JDS).map((role) => (
+                  <button
+                    key={role}
+                    onClick={() => setJd(SAMPLE_JDS[role])}
+                    className="text-xs font-medium rounded-full px-3 py-1.5 border"
+                    style={{ borderColor: 'var(--border)', color: 'var(--muted)', background: 'var(--white)' }}
+                  >
+                    Try: {role}
+                  </button>
+                ))}
+              </div>
+
+              <button
+                onClick={handleAnalyse}
+                disabled={!jd.trim()}
+                className="text-sm font-medium rounded-lg px-6 py-3 disabled:opacity-40"
+                style={{ background: 'var(--ink)', color: 'var(--paper)' }}
+              >
+                Analyse this JD
+              </button>
             </div>
 
-            <button
-              onClick={handleContinue}
-              disabled={selectedSkills.length === 0}
-              className="text-sm font-medium rounded-lg px-6 py-3 disabled:opacity-40"
-              style={{ background: 'var(--ink)', color: 'var(--paper)' }}
-            >
-              {continueClicked && !apiDone ? 'Reading your JD...' : 'Continue'}
-            </button>
+            {/* Screen 2: skill selection */}
+            <div style={{ width: '50%' }} className="pl-4">
+              <div
+                className="rounded-2xl p-6 border"
+                style={{ background: 'var(--white)', borderColor: 'var(--border)' }}
+              >
+                <h2 className="text-base font-semibold mb-1" style={{ color: 'var(--ink)' }}>
+                  While we read your JD, pick the skills you want to use
+                </h2>
+                <p className="text-xs mb-6" style={{ color: 'var(--muted)' }}>
+                  Choose at least one to continue.
+                </p>
+
+                <div className="grid sm:grid-cols-2 gap-6 mb-6">
+                  {Object.entries(SKILL_CATEGORIES).map(([category, skills]) => (
+                    <div key={category}>
+                      <p className="text-xs font-semibold uppercase tracking-wide mb-2" style={{ color: 'var(--muted)' }}>
+                        {category}
+                      </p>
+                      <div className="flex flex-wrap gap-2">
+                        {skills.map((skill) => {
+                          const selected = selectedSkills.includes(skill)
+                          return (
+                            <button
+                              key={skill}
+                              onClick={() => toggleSkill(skill)}
+                              className="text-xs font-medium rounded-full px-3 py-1.5 border transition-colors"
+                              style={{
+                                borderColor: selected ? 'var(--accent)' : 'var(--border)',
+                                background: selected ? 'var(--accent-bg)' : 'var(--white)',
+                                color: selected ? 'var(--accent-dark)' : 'var(--ink)',
+                              }}
+                            >
+                              {skill}
+                            </button>
+                          )
+                        })}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="flex items-center gap-3">
+                  <button
+                    onClick={() => setStep('jd')}
+                    className="text-sm font-medium rounded-lg px-4 py-3"
+                    style={{ background: 'var(--tag-bg)', color: 'var(--ink)' }}
+                  >
+                    Back
+                  </button>
+                  <button
+                    onClick={handleContinue}
+                    disabled={selectedSkills.length === 0}
+                    className="text-sm font-medium rounded-lg px-6 py-3 disabled:opacity-40"
+                    style={{ background: 'var(--ink)', color: 'var(--paper)' }}
+                  >
+                    {continueClicked && !apiDone ? 'Reading your JD...' : 'Continue'}
+                  </button>
+                </div>
+              </div>
+            </div>
           </div>
-        )}
+        </div>
       </div>
     </div>
   )
