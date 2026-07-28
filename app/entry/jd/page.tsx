@@ -102,7 +102,7 @@ export default function JdEntryPage() {
             }}
           >
             {/* Screen 1: JD input */}
-            <div style={{ width: '50%' }} className="pr-4">
+            <div style={{ flex: '0 0 50%', boxSizing: 'border-box' }} className="pr-4">
               <h1
                 className="text-2xl font-bold mb-2"
                 style={{ color: 'var(--ink)', fontFamily: 'var(--font-space-grotesk)' }}
@@ -145,7 +145,7 @@ export default function JdEntryPage() {
             </div>
 
             {/* Screen 2: skill selection */}
-            <div style={{ width: '50%' }} className="pl-4">
+            <div style={{ flex: '0 0 50%', boxSizing: 'border-box' }} className="pl-4">
               <div
                 className="rounded-2xl p-6 border"
                 style={{ background: 'var(--white)', borderColor: 'var(--border)' }}
