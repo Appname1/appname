@@ -39,7 +39,6 @@ const SKILL_CATEGORIES = {
 export default function JdEntryPage() {
   const router = useRouter()
   const [jd, setJd] = useState('')
-  const [analysing, setAnalysing] = useState(false)
   const [showSkillPanel, setShowSkillPanel] = useState(false)
   const [selectedSkills, setSelectedSkills] = useState<string[]>([])
   const [apiResult, setApiResult] = useState<unknown>(null)
@@ -55,7 +54,6 @@ export default function JdEntryPage() {
   const handleAnalyse = () => {
     if (!jd.trim()) return
 
-    setAnalysing(true)
     setShowSkillPanel(true) // show instantly, don't wait on the API
 
     fetch('/api/suggest', {
