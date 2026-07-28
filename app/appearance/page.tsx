@@ -30,14 +30,25 @@ export default function AppearancePage() {
           </div>
           <button
             onClick={() => setRandomMode(!randomMode)}
-            className="w-12 h-6 rounded-full relative transition-colors"
-            style={{ background: randomMode ? 'var(--accent)' : 'var(--border)' }}
+            type="button"
+            className="flex items-center rounded-full transition-colors p-0.5"
+            style={{
+              width: '48px',
+              height: '24px',
+              background: randomMode ? 'var(--accent)' : 'var(--border)',
+              justifyContent: randomMode ? 'flex-end' : 'flex-start',
+              flexShrink: 0,
+              border: 'none',
+              cursor: 'pointer',
+            }}
           >
             <span
-              className="absolute top-0.5 w-5 h-5 rounded-full transition-transform"
+              className="rounded-full transition-transform"
               style={{
+                width: '20px',
+                height: '20px',
                 background: 'var(--white)',
-                transform: randomMode ? 'translateX(26px)' : 'translateX(2px)',
+                display: 'block',
               }}
             />
           </button>
