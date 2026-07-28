@@ -87,24 +87,21 @@ export default function LandingPage() {
               className="rounded-2xl p-6 flex-1 flex flex-col justify-center"
               style={{ background: 'var(--green-bg)', border: '1px solid var(--border)' }}
             >
-              <p className="text-xs font-medium mb-2" style={{ color: 'var(--green-dark)' }}>
-                Keep the streak going
+              <p className="text-xs font-medium mb-1" style={{ color: 'var(--green-dark)' }}>
+                Every project includes
               </p>
-              <div className="flex gap-1.5">
-                {[1, 2, 3, 4, 5].map((d) => (
-                  <div
-                    key={d}
-                    className="flex-1 h-8 rounded-md"
-                    style={{ background: d <= 3 ? 'var(--green)' : 'var(--border)' }}
-                  />
-                ))}
-              </div>
+              <p className="text-3xl font-bold mb-1" style={{ color: 'var(--ink)', fontFamily: 'var(--font-space-grotesk)' }}>
+                6-8 steps
+              </p>
+              <p className="text-xs" style={{ color: 'var(--muted)' }}>
+                real code, quizzes, and a working repo
+              </p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* How it works: fixed-width number column, connecting rail, consistent left alignment */}
+      {/* How it works */}
       <section className="max-w-4xl mx-auto px-6 py-16">
         <h2
           className="text-2xl font-bold mb-10"
@@ -155,7 +152,7 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* What you get: labeled rows, not a plain paragraph dump */}
+      {/* What you get */}
       <section className="max-w-3xl mx-auto px-6 py-16">
         <h2
           className="text-2xl font-bold mb-5"
@@ -188,16 +185,19 @@ export default function LandingPage() {
       {/* Credit packs */}
       <section className="max-w-6xl mx-auto px-6 py-16">
         <h2
-          className="text-2xl font-bold mb-10 text-center"
+          className="text-2xl font-bold mb-2 text-center"
           style={{ color: 'var(--ink)', fontFamily: 'var(--font-space-grotesk)' }}
         >
           Credit packs
         </h2>
+        <p className="text-sm text-center mb-10" style={{ color: 'var(--muted)' }}>
+          Pricing coming soon. Start free with 300 credits today.
+        </p>
         <div className="grid sm:grid-cols-3 gap-5">
           {[
-            { name: 'Starter', credits: '300', inr: 'TBD', usd: 'TBD' },
-            { name: 'Builder', credits: '1,000', inr: 'TBD', usd: 'TBD' },
-            { name: 'Pro', credits: '3,000', inr: 'TBD', usd: 'TBD' },
+            { name: 'Starter', credits: '300' },
+            { name: 'Builder', credits: '1,000' },
+            { name: 'Pro', credits: '3,000' },
           ].map((pack) => (
             <div
               key={pack.name}
@@ -210,11 +210,8 @@ export default function LandingPage() {
               <p className="text-3xl font-bold mb-1" style={{ color: 'var(--ink)', fontFamily: 'var(--font-space-grotesk)' }}>
                 {pack.credits}
               </p>
-              <p className="text-xs mb-6" style={{ color: 'var(--muted)' }}>
+              <p className="text-xs" style={{ color: 'var(--muted)' }}>
                 credits
-              </p>
-              <p className="text-sm" style={{ color: 'var(--ink)' }}>
-                ₹{pack.inr} / ${pack.usd}
               </p>
             </div>
           ))}
