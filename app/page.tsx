@@ -47,17 +47,17 @@ export default function LandingPage() {
               className="inline-block text-xs font-semibold rounded-full px-3 py-1 mb-6 w-fit"
               style={{ background: 'var(--accent-bg)', color: 'var(--accent-dark)' }}
             >
-              One JD in. One real project out.
+              Three ways to start. One real project out.
             </span>
             <h1
               className="text-4xl lg:text-5xl font-bold leading-tight mb-5"
               style={{ color: 'var(--ink)', fontFamily: 'var(--font-space-grotesk)' }}
             >
-              Stop building the same tutorial project as everyone else applying for your job.
+              Stop guessing what to build. Start building what gets you hired.
             </h1>
             <p className="text-base mb-8 max-w-lg" style={{ color: 'var(--muted)' }}>
-              Paste the job description. We hand you 3 project ideas built for that exact posting,
-              with real data, real code you understand, and interview answers ready before anyone asks.
+              Choose how you start, a job description, a role, or a custom project, then build it for
+              real: working code, plain English explanations, and interview prep built in.
             </p>
             <Link
               href="/login"
