@@ -34,6 +34,8 @@ Rules:
 - domain and difficulty must be exact values from the allowed list.
 - is_case_study is true for business-scenario projects.
 - Vague job descriptions must still return 3 sensible suggestions.
+- tech_stack MUST primarily consist of the skills the user selected (given in the message below). Only add a tool outside that list if the project genuinely cannot be built without it (e.g. a specific library required for a technique), and even then add at most one such tool.
+- Do not substitute a selected skill for a similar one the user didn't pick (e.g. if the user picked Power BI, don't swap in Tableau).
 - Return ONLY raw JSON, nothing before { and nothing after }.`
 
 export async function POST(request: Request) {
@@ -41,7 +43,6 @@ export async function POST(request: Request) {
     const body = await request.json()
     const { jd, skills } = body
 
-    // Input validation
     if (!jd || typeof jd !== 'string' || jd.trim().length === 0) {
       return NextResponse.json({ error: 'jd_required' }, { status: 400 })
     }
@@ -49,7 +50,6 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'skills_required' }, { status: 400 })
     }
 
-    // X-Test header: return mock data instantly, no API call
     if (request.headers.get('X-Test') === 'true') {
       const mockSuggestion = (n: number) => ({
         title: `Mock Project ${n}`,
@@ -77,7 +77,6 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'unauthorized' }, { status: 401 })
     }
 
-    // Rate limiting: max 10 per user per hour
     const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000).toISOString()
     const { data: recentCalls } = await supabase
       .from('rate_limits')
@@ -98,17 +97,18 @@ export async function POST(request: Request) {
       window_start: new Date().toISOString(),
     })
 
+    const userMessage = 'Job description: ' + jd + '\n\nSelected skills: ' + skills.join(', ')
+
     const completion = await groq.chat.completions.create({
       model: 'llama-3.3-70b-versatile',
       messages: [
         { role: 'system', content: SYSTEM_PROMPT },
-        { role: 'user', content: `Job description: ${jd}\n\nSelected skills: ${skills.join(', ')}` },
+        { role: 'user', content: userMessage },
       ],
       max_tokens: 2000,
     })
 
     let raw = completion.choices[0]?.message?.content ?? ''
-    // Strip accidental backticks from response before JSON.parse
     raw = raw.replace(/```json\s*/g, '').replace(/```\s*/g, '').trim()
 
     let parsed
