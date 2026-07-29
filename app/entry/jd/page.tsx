@@ -35,12 +35,33 @@ const SKILL_CATEGORIES = {
   'NLP & GenAI': ['NLTK', 'LangChain', 'OpenAI API', 'Vector Databases'],
   'Engineering Tools': ['Python', 'Docker', 'AWS', 'Git'],
 }
+const DOMAIN_KEYWORDS: Record<string, string[]> = {
+  'Data Analysis': ['sql', 'dashboard', 'power bi', 'tableau', 'excel', 'analyst', 'reporting', 'stakeholder'],
+  'ML & AI': ['machine learning', 'scikit', 'model', 'predict', 'xgboost', 'tensorflow', 'mlops', 'deploy'],
+  'NLP & GenAI': ['llm', 'langchain', 'rag', 'chatbot', 'nlp', 'prompt', 'openai', 'embedding'],
+  'Engineering Tools': ['docker', 'aws', 'pipeline', 'infrastructure', 'ci/cd', 'engineer'],
+}
+
+function detectCategory(jdText: string): string {
+  const lower = jdText.toLowerCase()
+  let bestMatch = 'Data Analysis'
+  let bestScore = -1
+  for (const [category, keywords] of Object.entries(DOMAIN_KEYWORDS)) {
+    const score = keywords.filter((k) => lower.includes(k)).length
+    if (score > bestScore) {
+      bestScore = score
+      bestMatch = category
+    }
+  }
+  return bestMatch
+}
 
 export default function JdEntryPage() {
   const router = useRouter()
   const [jd, setJd] = useState('')
   const [step, setStep] = useState<'jd' | 'skills'>('jd')
   const [selectedSkills, setSelectedSkills] = useState<string[]>([])
+  const [showAllSkills, setShowAllSkills] = useState(false)
   const [apiResult, setApiResult] = useState<unknown>(null)
   const [apiDone, setApiDone] = useState(false)
   const [continueClicked, setContinueClicked] = useState(false)
@@ -54,6 +75,7 @@ export default function JdEntryPage() {
   const handleAnalyse = () => {
     if (!jd.trim()) return
 
+    setShowAllSkills(false)
     setStep('skills') // slide to the next screen instantly, don't wait on the API
 
     fetch('/api/suggest', {
@@ -157,34 +179,52 @@ export default function JdEntryPage() {
                   Choose at least one to continue.
                 </p>
 
-                <div className="grid sm:grid-cols-2 gap-6 mb-6">
-                  {Object.entries(SKILL_CATEGORIES).map(([category, skills]) => (
-                    <div key={category}>
-                      <p className="text-xs font-semibold uppercase tracking-wide mb-2" style={{ color: 'var(--muted)' }}>
-                        {category}
-                      </p>
-                      <div className="flex flex-wrap gap-2">
-                        {skills.map((skill) => {
-                          const selected = selectedSkills.includes(skill)
-                          return (
-                            <button
-                              key={skill}
-                              onClick={() => toggleSkill(skill)}
-                              className="text-xs font-medium rounded-full px-3 py-1.5 border transition-colors"
-                              style={{
-                                borderColor: selected ? 'var(--accent)' : 'var(--border)',
-                                background: selected ? 'var(--accent-bg)' : 'var(--white)',
-                                color: selected ? 'var(--accent-dark)' : 'var(--ink)',
-                              }}
-                            >
-                              {skill}
-                            </button>
-                          )
-                        })}
-                      </div>
+                {(() => {
+                  const matchedCategory = detectCategory(jd)
+                  const categoriesToShow = showAllSkills
+                    ? Object.entries(SKILL_CATEGORIES)
+                    : [[matchedCategory, SKILL_CATEGORIES[matchedCategory as keyof typeof SKILL_CATEGORIES]] as [string, string[]]]
+
+                  return (
+                    <div className="mb-4">
+                      {categoriesToShow.map(([category, skills]) => (
+                        <div key={category} className="mb-4">
+                          <p className="text-sm font-semibold uppercase tracking-wide mb-2" style={{ color: 'var(--muted)' }}>
+                            {category}
+                          </p>
+                          <div className="flex flex-wrap gap-2">
+                            {skills.map((skill) => {
+                              const selected = selectedSkills.includes(skill)
+                              return (
+                                <button
+                                  key={skill}
+                                  onClick={() => toggleSkill(skill)}
+                                  className="text-sm font-medium rounded-full px-3.5 py-2 border transition-colors"
+                                  style={{
+                                    borderColor: selected ? 'var(--accent)' : 'var(--border)',
+                                    background: selected ? 'var(--accent-bg)' : 'var(--white)',
+                                    color: selected ? 'var(--accent-dark)' : 'var(--ink)',
+                                  }}
+                                >
+                                  {skill}
+                                </button>
+                              )
+                            })}
+                          </div>
+                        </div>
+                      ))}
+                      {!showAllSkills && (
+                        <button
+                          onClick={() => setShowAllSkills(true)}
+                          className="text-sm font-medium underline"
+                          style={{ color: 'var(--accent)' }}
+                        >
+                          Show more skills
+                        </button>
+                      )}
                     </div>
-                  ))}
-                </div>
+                  )
+                })()}
 
                 <div className="flex items-center gap-3">
                   <button

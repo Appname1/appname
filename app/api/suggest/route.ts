@@ -35,6 +35,7 @@ Rules:
 - is_case_study is true for business-scenario projects.
 - Vague job descriptions must still return 3 sensible suggestions.
 - tech_stack MUST primarily consist of the skills the user selected (given in the message below). Only add a tool outside that list if the project genuinely cannot be built without it (e.g. a specific library required for a technique), and even then add at most one such tool.
+- At most 1 of the 3 suggestions may have is_case_study set to true. The other 2 must be is_case_study: false.
 - Do not substitute a selected skill for a similar one the user didn't pick (e.g. if the user picked Power BI, don't swap in Tableau).
 - Return ONLY raw JSON, nothing before { and nothing after }.`
 

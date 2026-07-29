@@ -158,7 +158,7 @@ export default function SuggestionsPage() {
                   )}
                 </div>
 
-                <h2 className="text-lg font-semibold mb-2" style={{ color: 'var(--ink)' }}>
+                <h2 className="text-xl font-semibold mb-2" style={{ color: 'var(--ink)' }}>
                   {s.title}
                 </h2>
 
@@ -177,15 +177,14 @@ export default function SuggestionsPage() {
                   </div>
                 </div>
 
-                <p className="text-sm mb-4 flex-1" style={{ color: 'var(--muted)' }}>
+                <p className="text-base mb-4 flex-1" style={{ color: 'var(--muted)' }}>
                   {s.why_relevant}
                 </p>
-
                 <div className="flex flex-wrap gap-1.5 mb-4">
                   {s.tech_stack.map((t) => (
                     <span
                       key={t}
-                      className="text-xs rounded-md px-2 py-1"
+                      className="text-sm rounded-md px-2.5 py-1.5"
                       style={{ background: 'var(--tag-bg)', color: 'var(--ink)' }}
                     >
                       {t}
