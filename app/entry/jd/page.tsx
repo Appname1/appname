@@ -29,11 +29,13 @@ Experience with LangChain or similar orchestration frameworks is expected, along
 This role sits at the intersection of product and engineering, so clear communication about tradeoffs and limitations of AI systems matters as much as the technical build.`,
 }
 
+const CORE_SKILLS = ['Python', 'R', 'SQL', 'Excel']
+
 const SKILL_CATEGORIES = {
-  'Data Analysis': ['Excel', 'SQL', 'Power BI', 'Tableau', 'Pandas'],
+  'Data Visualization & BI': ['Power BI', 'Tableau', 'Pandas'],
   'ML & AI': ['scikit-learn', 'TensorFlow', 'PyTorch', 'XGBoost'],
   'NLP & GenAI': ['NLTK', 'LangChain', 'OpenAI API', 'Vector Databases'],
-  'Engineering Tools': ['Python', 'Docker', 'AWS', 'Git'],
+  'Engineering Tools': ['Docker', 'AWS', 'Git'],
 }
 const DOMAIN_KEYWORDS: Record<string, string[]> = {
   'Data Analysis': ['sql', 'dashboard', 'power bi', 'tableau', 'excel', 'analyst', 'reporting', 'stakeholder'],
@@ -187,6 +189,31 @@ export default function JdEntryPage() {
 
                   return (
                     <div className="mb-4">
+                      <div className="mb-5">
+                        <p className="text-sm font-semibold uppercase tracking-wide mb-2" style={{ color: 'var(--muted)' }}>
+                          Core Skills
+                        </p>
+                        <div className="flex flex-wrap gap-2">
+                          {CORE_SKILLS.map((skill) => {
+                            const selected = selectedSkills.includes(skill)
+                            return (
+                              <button
+                                key={skill}
+                                onClick={() => toggleSkill(skill)}
+                                className="text-sm font-medium rounded-full px-3.5 py-2 border transition-colors"
+                                style={{
+                                  borderColor: selected ? 'var(--accent)' : 'var(--border)',
+                                  background: selected ? 'var(--accent-bg)' : 'var(--white)',
+                                  color: selected ? 'var(--accent-dark)' : 'var(--ink)',
+                                }}
+                              >
+                                {skill}
+                              </button>
+                            )
+                          })}
+                        </div>
+                      </div>
+
                       {categoriesToShow.map(([category, skills]) => (
                         <div key={category} className="mb-4">
                           <p className="text-sm font-semibold uppercase tracking-wide mb-2" style={{ color: 'var(--muted)' }}>
