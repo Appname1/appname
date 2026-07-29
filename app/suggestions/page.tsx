@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { createClient } from '@/lib/supabase'
 
 interface Dataset {
   name: string
@@ -20,35 +21,52 @@ interface Suggestion {
   datasets: Dataset[]
 }
 
-const CREDIT_COST = 50
-
 export default function SuggestionsPage() {
   const router = useRouter()
   const [suggestions, setSuggestions] = useState<Suggestion[]>([])
   const [loaded, setLoaded] = useState(false)
   const [error, setError] = useState(false)
+  const [projectsCompleted, setProjectsCompleted] = useState(0)
 
   useEffect(() => {
-    const raw = sessionStorage.getItem('suggestions')
-    if (!raw) {
-      setError(true)
-      setLoaded(true)
-      return
-    }
-    try {
-      const parsed = JSON.parse(raw)
-      if (parsed.error || !Array.isArray(parsed.suggestions)) {
+    async function init() {
+      const raw = sessionStorage.getItem('suggestions')
+      if (!raw) {
         setError(true)
-      } else {
-        setSuggestions(parsed.suggestions)
+        setLoaded(true)
+        return
       }
-    } catch {
-      setError(true)
+      try {
+        const parsed = JSON.parse(raw)
+        if (parsed.error || !Array.isArray(parsed.suggestions)) {
+          setError(true)
+        } else {
+          setSuggestions(parsed.suggestions)
+        }
+      } catch {
+        setError(true)
+      }
+
+      const supabase = createClient()
+      const { data: { user } } = await supabase.auth.getUser()
+      if (user) {
+        const { data: profile } = await supabase
+          .from('users')
+          .select('total_projects_completed')
+          .eq('id', user.id)
+          .single()
+        setProjectsCompleted(profile?.total_projects_completed ?? 0)
+      }
+
+      setLoaded(true)
     }
-    setLoaded(true)
+    init()
   }, [])
 
+  const caseStudiesUnlocked = projectsCompleted >= 2
+
   const handleBuild = (suggestion: Suggestion) => {
+    if (suggestion.is_case_study && !caseStudiesUnlocked) return
     localStorage.setItem('appname_selected_project', JSON.stringify(suggestion))
     router.push('/upload')
   }
@@ -95,14 +113,17 @@ export default function SuggestionsPage() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
           {suggestions.map((s, i) => {
             const isRecommended = s.relevancy_score === maxScore
+            const isLocked = s.is_case_study && !caseStudiesUnlocked
+
             return (
               <div
                 key={i}
-                className="rounded-2xl p-6 flex flex-col border"
+                className="rounded-2xl p-6 flex flex-col border relative"
                 style={{
                   background: 'var(--white)',
                   borderColor: isRecommended ? 'var(--accent)' : 'var(--border)',
                   borderWidth: isRecommended ? '2px' : '1px',
+                  opacity: isLocked ? 0.7 : 1,
                 }}
               >
                 {isRecommended && (
@@ -130,9 +151,9 @@ export default function SuggestionsPage() {
                   {s.is_case_study && (
                     <span
                       className="text-xs font-medium rounded-full px-2.5 py-1"
-                      style={{ background: 'var(--green-bg)', color: 'var(--green-dark)' }}
+                      style={{ background: isLocked ? 'var(--tag-bg)' : 'var(--green-bg)', color: isLocked ? 'var(--muted)' : 'var(--green-dark)' }}
                     >
-                      Case Study
+                      {isLocked ? 'Case Study (locked)' : 'Case Study'}
                     </span>
                   )}
                 </div>
@@ -188,17 +209,32 @@ export default function SuggestionsPage() {
                     className="text-xs font-medium rounded-full px-2.5 py-1"
                     style={{ background: 'var(--tag-bg)', color: 'var(--ink)' }}
                   >
-                    {CREDIT_COST} credits
+                    Uses credits
                   </span>
                 </div>
 
-                <button
-                  onClick={() => handleBuild(s)}
-                  className="w-full text-sm font-medium rounded-lg py-2.5"
-                  style={{ background: 'var(--ink)', color: 'var(--paper)' }}
-                >
-                  Build This Project
-                </button>
+                {isLocked ? (
+                  <div>
+                    <button
+                      disabled
+                      className="w-full text-sm font-medium rounded-lg py-2.5 cursor-not-allowed"
+                      style={{ background: 'var(--border)', color: 'var(--muted)' }}
+                    >
+                      Locked
+                    </button>
+                    <p className="text-xs mt-2 text-center" style={{ color: 'var(--muted)' }}>
+                      Complete {2 - projectsCompleted} more project{2 - projectsCompleted === 1 ? '' : 's'} to unlock
+                    </p>
+                  </div>
+                ) : (
+                  <button
+                    onClick={() => handleBuild(s)}
+                    className="w-full text-sm font-medium rounded-lg py-2.5"
+                    style={{ background: 'var(--ink)', color: 'var(--paper)' }}
+                  >
+                    Build This Project
+                  </button>
+                )}
               </div>
             )
           })}
