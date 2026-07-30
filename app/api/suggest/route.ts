@@ -32,9 +32,9 @@ Rules:
 - Exactly 3 suggestions, exactly 3 Kaggle datasets per suggestion.
 - relevancy_score is a NUMBER, not a string.
 - domain and difficulty must be exact values from the allowed list.
-- is_case_study is true for business-scenario projects.
+- Exactly 2 of the 3 suggestions must have is_case_study set to false (regular projects). Exactly 1 must have is_case_study set to true (a business-scenario case study). This 2-and-1 split is mandatory every time.
 - Vague job descriptions must still return 3 sensible suggestions.
-- tech_stack MUST include every selected skill that is genuinely usable in that specific project. Do not default to only one selected skill (e.g. only Python) when the user selected multiple relevant ones (e.g. SQL, Power BI, Python) — use all of them across the 3 suggestions where they make sense. Only add a tool outside the selected list if the project genuinely cannot be built without it, and even then add at most one such tool.
+- The user's selected skills are listed in the message below. EVERY suggestion's tech_stack must include AT LEAST 2 of the user's selected skills, not just 1. If the user selected 3 or more skills, aim to use most of them across the 3 suggestions, not the same single skill repeated. This is a hard requirement, not a suggestion.
 - Do not substitute a selected skill for a similar one the user didn't pick (e.g. if the user picked Power BI, don't swap in Tableau).
 - Return ONLY raw JSON, nothing before { and nothing after }.`
 

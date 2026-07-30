@@ -37,8 +37,9 @@ const SKILL_CATEGORIES = {
   'NLP & GenAI': ['NLTK', 'LangChain', 'OpenAI API', 'Vector Databases'],
   'Engineering Tools': ['Docker', 'AWS', 'Git'],
 }
+
 const DOMAIN_KEYWORDS: Record<string, string[]> = {
-  'Data Analysis': ['sql', 'dashboard', 'power bi', 'tableau', 'excel', 'analyst', 'reporting', 'stakeholder'],
+  'Data Visualization & BI': ['sql', 'dashboard', 'power bi', 'tableau', 'excel', 'analyst', 'reporting', 'stakeholder'],
   'ML & AI': ['machine learning', 'scikit', 'model', 'predict', 'xgboost', 'tensorflow', 'mlops', 'deploy'],
   'NLP & GenAI': ['llm', 'langchain', 'rag', 'chatbot', 'nlp', 'prompt', 'openai', 'embedding'],
   'Engineering Tools': ['docker', 'aws', 'pipeline', 'infrastructure', 'ci/cd', 'engineer'],
@@ -46,7 +47,7 @@ const DOMAIN_KEYWORDS: Record<string, string[]> = {
 
 function detectCategory(jdText: string): string {
   const lower = jdText.toLowerCase()
-  let bestMatch = 'Data Analysis'
+  let bestMatch = 'Data Visualization & BI'
   let bestScore = -1
   for (const [category, keywords] of Object.entries(DOMAIN_KEYWORDS)) {
     const score = keywords.filter((k) => lower.includes(k)).length
@@ -78,7 +79,7 @@ export default function JdEntryPage() {
     if (!jd.trim()) return
 
     setShowAllSkills(false)
-    setStep('skills') // slide to the next screen instantly, don't wait on the API
+    setStep('skills')
 
     fetch('/api/suggest', {
       method: 'POST',
