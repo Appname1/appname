@@ -58,24 +58,33 @@ export default function CustomEntryPage() {
   if (submitted) {
     return (
       <div className="min-h-screen flex items-center justify-center" style={{ background: 'var(--paper)' }}>
-        <div className="max-w-md px-6 text-center">
+        <div className="max-w-xl px-6 text-center w-full">
           <h1
-            className="text-xl font-bold mb-3"
+            className="text-2xl font-bold mb-6"
             style={{ color: 'var(--ink)', fontFamily: 'var(--font-space-grotesk)' }}
           >
             While we shape your project...
           </h1>
           <div
-            className="rounded-2xl p-6 border text-left"
+            className="rounded-2xl p-8 border text-left"
             style={{ background: 'var(--white)', borderColor: 'var(--border)' }}
           >
-            <p className="text-sm mb-3" style={{ color: 'var(--muted)' }}>
+            <p className="text-base mb-5" style={{ color: 'var(--muted)' }}>
               A few things worth knowing before you start building:
             </p>
-            <ul className="text-sm space-y-2" style={{ color: 'var(--ink)' }}>
-              <li>• Every step comes with real, working code — never a black box.</li>
-              <li>• You&apos;ll get a short quiz after each step to check it actually stuck.</li>
-              <li>• At the end, you get interview talking points pulled from what you built.</li>
+            <ul className="text-base space-y-4" style={{ color: 'var(--ink)' }}>
+              <li className="flex gap-3">
+                <span style={{ color: 'var(--accent)' }}>●</span>
+                <span>Every step comes with real, working code — never a black box.</span>
+              </li>
+              <li className="flex gap-3">
+                <span style={{ color: 'var(--accent)' }}>●</span>
+                <span>You&apos;ll get a short quiz after each step to check it actually stuck.</span>
+              </li>
+              <li className="flex gap-3">
+                <span style={{ color: 'var(--accent)' }}>●</span>
+                <span>At the end, you get interview talking points pulled from what you built.</span>
+              </li>
             </ul>
           </div>
         </div>
