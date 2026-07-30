@@ -40,8 +40,32 @@ export default async function DashboardPage() {
           <p className="mb-8" style={{ color: 'var(--muted)' }}>
             {activeProject
               ? 'Pick up where you left off.'
-              : "Let&apos;s build something you can show off."}
+              : "Let's build something you can show off."}
           </p>
+
+          <div
+            className="rounded-xl p-5 mb-6 border flex items-center justify-between"
+            style={{ background: 'var(--accent-bg)', borderColor: 'var(--border)' }}
+          >
+            <div>
+              <span
+                className="inline-block text-xs font-semibold rounded-full px-2.5 py-1 mb-2"
+                style={{ background: 'var(--accent)', color: 'var(--paper)' }}
+              >
+                Today&apos;s Project
+              </span>
+              <h3 className="text-base font-semibold" style={{ color: 'var(--ink)' }}>
+                Retail Sales Performance Dashboard
+              </h3>
+              <p className="text-sm" style={{ color: 'var(--accent-dark)' }}>
+                Data Analyst - Beginner friendly
+              </p>
+            </div>
+            
+             <a href="/entry" className="text-sm font-medium rounded-lg px-4 py-2 shrink-0" style={{ background: 'var(--ink)', color: 'var(--paper)' }}>
+              Try it
+            </a>
+          </div>
 
           {activeProject ? (
             <div
