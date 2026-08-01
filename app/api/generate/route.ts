@@ -58,15 +58,32 @@ Exact JSON structure:
   "interview_talking_points": [],
   "description_test_prompt": ""
 }
-Code rules: industry quality, real pandas/sklearn/matplotlib, executable in Google Colab.
+Code rules: industry quality, real pandas/sklearn/matplotlib, executable in Google Colab. Code should look like a beginner-friendly tutorial, not a compressed one-liner-heavy script — favor clarity over cleverness.
+
+VARIABLE NAMING RULE: always use "df" as the main DataFrame variable name, consistently across every step, unless the project genuinely needs to distinguish multiple DataFrames (e.g. train_df, test_df) — never invent a different single-DataFrame name like "dataset" or "data".
+
+REQUIRED EARLY STEPS: for any project involving a DataFrame, the first 1-2 steps must cover basic exploration before any transformation happens: importing libraries, reading the CSV into df, then df.head(), df.shape, df.info(), df.describe(), and df.isnull().sum(). Do not skip straight to feature engineering or modeling without these.
 
 CODE RULE (applies to the "code" field itself, not just the explanation): when the logic involves iterating, filtering, or transforming data manually, write it using explicit for loops — NOT list comprehensions, lambda, map(), or filter(). This applies even when list comprehensions would be more idiomatic. Standard library/pandas/sklearn one-liners (e.g. train_test_split, model.fit, df.groupby) are fine as-is since they aren't manual iteration.
 
-beginner_breakdown is DIFFERENT from explanation. Do not blur them together:
-- beginner_breakdown: a literal, line-by-line walkthrough of what the code in THIS step does, written like a patient tutor talking a beginner through unfamiliar syntax. Reference actual variable names and actual lines from the code field. Use small concrete analogies for any non-obvious Python/data-science mechanic appearing in the code (e.g. if the code uses .map() for encoding, explain it like: "map() replaces each value using a lookup — like a dictionary: {'female': 1, 'male': 0} means every 'female' becomes 1"). If the code uses groupby, break down exactly what gets grouped and what the aggregation does, step by step. This should read like someone teaching a friend who has never seen this exact pattern before, not a summary paragraph.
-- explanation: 2-3 sentences on WHY this step exists in the project (the practical/business reason), not how the code works. This is the reasoning, not the mechanics.
+beginner_breakdown MUST be a true line-by-line walkthrough for someone who has NEVER written Python before. Do NOT summarize what the code accomplishes — that belongs in "explanation", not here. Instead:
+- Go through the code field literally line by line, in order.
+- For each line, explain the exact syntax in plain words, as if teaching someone who doesn't know what a loop, function call, or method is.
+- Explicitly translate variable names used in that line (e.g. "df.columns is a list of every column name in df").
+- For any loop variable (like "c" in "for c in df.columns:"), explain: "c is just a name we made up to represent each item as we go through the list — you could call it anything, like 'col' or 'x'."
+- Note that variable names like df, c, or column names are arbitrary choices, not fixed keywords — the user could rename them.
+- Use short, concrete analogies for unfamiliar mechanics (dictionaries, encoding, groupby, etc.) exactly like explaining .map({'female':1,'male':0}) as "a lookup table — every 'female' becomes 1, every 'male' becomes 0."
 
-topics_used: list the underlying Python and data-science CONCEPTS actually exercised in this step's code — not just library names. Include fundamentals like "Dictionaries", "Lists", "Loops", "Multiple assignment", "f-strings", "Functions", "Encoding", "List indexing" wherever the code actually uses them, in addition to any library name (e.g. "Pandas", "Scikit-learn") if relevant. A step using df["Sex"].map({...}) should list both "Dictionaries" and "Encoding", not just "Pandas".
+Example of the beginner_breakdown quality bar, for the code:
+for c in df.columns:
+    if df[c].dtype == 'object':
+        df[c] = df[c].astype('category')
+
+Correct beginner_breakdown for this: "for c in df.columns: — this starts a loop. df.columns is a list of every column name in your dataframe. c is just a name we made up to stand in for each column name, one at a time, as the loop runs — you could call it col or x instead, it doesn't matter. Then, if df[c].dtype == 'object': checks the data type of that column — object usually means it holds text. If that's true, df[c] = df[c].astype('category') replaces that column with a 'category' version of itself, which pandas and machine learning models handle better than plain text."
+
+explanation: 2-3 sentences on WHY this step exists in the project (the practical/business reason), separate from beginner_breakdown.
+
+topics_used: the underlying Python and data-science CONCEPTS actually exercised in this step's code — not just library names. Include fundamentals like "Dictionaries", "Lists", "Loops", "Multiple assignment", "f-strings", "Functions", "Encoding", "List indexing" wherever the code actually uses them, alongside any library name (e.g. "Pandas") if relevant.
 quiz: 4 options always, warm encouraging tone, never trick questions, correct can be any of A/B/C/D.
 
 Step count: generate exactly ${stepCount} steps for domain ${domain}.

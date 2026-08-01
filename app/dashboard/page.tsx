@@ -25,6 +25,24 @@ export default async function DashboardPage() {
   const activeProject = projects?.[0]
   const displayName = profile?.name?.split(' ')[0] || 'there'
 
+  let continueStep = 1
+  if (activeProject) {
+    const { data: completedSteps } = await supabase
+      .from('step_progress')
+      .select('step_number')
+      .eq('project_id', activeProject.id)
+      .eq('user_id', authUser!.id)
+      .eq('completed', true)
+      .order('step_number', { ascending: false })
+      .limit(1)
+
+    if (completedSteps && completedSteps.length > 0) {
+      continueStep = completedSteps[0].step_number + 1
+    }
+  }
+
+  const continueHref = activeProject ? `/project/${activeProject.id}/step/${continueStep}` : '#'
+
   return (
     <div className="min-h-screen" style={{ background: 'var(--paper)' }}>
       <Navbar
@@ -61,8 +79,7 @@ export default async function DashboardPage() {
                 Data Analyst - Beginner friendly
               </p>
             </div>
-            
-             <a href="/entry" className="text-sm font-medium rounded-lg px-4 py-2 shrink-0" style={{ background: 'var(--ink)', color: 'var(--paper)' }}>
+            <a href="/entry" className="text-sm font-medium rounded-lg px-4 py-2 shrink-0" style={{ background: 'var(--ink)', color: 'var(--paper)' }}>
               Try it
             </a>
           </div>
@@ -81,12 +98,9 @@ export default async function DashboardPage() {
               <h2 className="text-xl font-bold mb-4" style={{ color: 'var(--ink)' }}>
                 {activeProject.project_json?.project_title || 'Untitled project'}
               </h2>
-              <button
-                className="text-sm font-medium rounded-lg px-5 py-2.5"
-                style={{ background: 'var(--ink)', color: 'var(--paper)' }}
-              >
+              <a href={continueHref} className="inline-block text-sm font-medium rounded-lg px-5 py-2.5" style={{ background: 'var(--ink)', color: 'var(--paper)' }}>
                 Continue
-              </button>
+              </a>
             </div>
           ) : (
             <div
@@ -96,12 +110,9 @@ export default async function DashboardPage() {
               <p className="mb-5" style={{ color: 'var(--muted)' }}>
                 You don&apos;t have an active project yet — no pressure, let&apos;s find one that fits.
               </p>
-              <button
-                className="text-sm font-medium rounded-lg px-5 py-2.5"
-                style={{ background: 'var(--ink)', color: 'var(--paper)' }}
-              >
+              <a href="/entry" className="inline-block text-sm font-medium rounded-lg px-5 py-2.5" style={{ background: 'var(--ink)', color: 'var(--paper)' }}>
                 Start New Project
-              </button>
+              </a>
             </div>
           )}
 
@@ -114,18 +125,14 @@ export default async function DashboardPage() {
           {projects && projects.length > 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {projects.map((p) => (
-                <div
-                  key={p.id}
-                  className="rounded-lg p-4 border"
-                  style={{ background: 'var(--white)', borderColor: 'var(--border)' }}
-                >
+                <a key={p.id} href={`/project/${p.id}/step/1`} className="block rounded-lg p-4 border" style={{ background: 'var(--white)', borderColor: 'var(--border)' }}>
                   <span className="text-xs font-semibold" style={{ color: 'var(--accent)' }}>
                     {p.domain}
                   </span>
                   <p className="text-sm font-medium mt-1" style={{ color: 'var(--ink)' }}>
                     {p.project_json?.project_title || 'Untitled project'}
                   </p>
-                </div>
+                </a>
               ))}
             </div>
           ) : (
