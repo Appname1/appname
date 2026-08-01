@@ -25,7 +25,7 @@ const spaceGrotesk = Space_Grotesk({
 
 export function generateMetadata(): Metadata {
   return {
-    title: "Appname",
+    title: "bornout",
     description: "Build real projects. Land the job.",
     other: {
       ...Sentry.getTraceData(),

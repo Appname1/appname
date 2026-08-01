@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import WaitlistForm from '@/components/WaitlistForm'
+import Logo from '@/components/Logo'
 
 const DOMAINS = ['Data Analyst', 'Data Scientist', 'ML Engineer', 'AI Engineer', 'NLP', 'GenAI', 'RAG']
 
@@ -23,9 +24,7 @@ export default function LandingPage() {
     <div style={{ background: 'var(--paper)' }}>
       <header className="border-b" style={{ borderColor: 'var(--border)' }}>
         <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
-          <span className="text-lg font-bold" style={{ color: 'var(--ink)' }}>
-            Appname
-          </span>
+          <Logo size={28} showWordmark />
           <Link
             href="/login"
             className="text-sm font-medium rounded-lg px-4 py-2"
@@ -235,9 +234,7 @@ export default function LandingPage() {
       {/* Footer */}
       <footer className="border-t py-10" style={{ borderColor: 'var(--border)' }}>
         <div className="max-w-6xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <span className="text-sm font-semibold" style={{ color: 'var(--ink)' }}>
-            Appname
-          </span>
+          <Logo size={20} showWordmark />
           <div className="flex gap-6 text-sm" style={{ color: 'var(--muted)' }}>
             <a href="mailto:hello@appname.com">hello@appname.com</a>
             <Link href="/privacy">Privacy</Link>

@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { signOut } from '@/lib/auth'
+import Logo from './Logo'
 
 interface NavbarProps {
   creditBalance: number
@@ -29,8 +30,8 @@ export default function Navbar({ creditBalance, userName }: NavbarProps) {
       style={{ background: 'var(--paper)', borderColor: 'var(--border)' }}
     >
       <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
-        <Link href="/dashboard" className="text-lg font-bold" style={{ color: 'var(--ink)' }}>
-          Appname
+        <Link href="/dashboard" className="flex items-center">
+          <Logo size={28} showWordmark />
         </Link>
 
         <div className="hidden md:flex items-center gap-8">
