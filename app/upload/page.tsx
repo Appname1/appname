@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase'
 
 const CREDIT_COST = 50
-const MAX_SIZE_BYTES = 10 * 1024 * 1024
+const MAX_SIZE_BYTES = 50 * 1024 * 1024
 
 interface Dataset {
   name: string
@@ -241,7 +241,7 @@ export default function UploadPage() {
               {fileName || 'Click to choose a CSV file'}
             </p>
             <p className="text-xs mt-1" style={{ color: 'var(--muted)' }}>
-              Max 10MB
+              Max 50MB
             </p>
           </label>
           {fileError && (

@@ -36,7 +36,7 @@ const QUIZ_QUESTIONS = [
     options: [
       'A. I usually need help figuring out what went wrong',
       'B. I can often trace it back with some effort',
-      'C. I&apos;m fairly quick at debugging on my own',
+      "C. I'm fairly quick at debugging on my own",
       'D. Errors rarely slow me down for long',
     ],
   },
@@ -202,7 +202,7 @@ export default function LoadingPage() {
     } else {
       // finished everything — navigate if generation is done
       if (projectIdRef.current) {
-        router.push(`/projects/${projectIdRef.current}`)
+        router.push(`/project/${projectIdRef.current}/step/1`)
       } else {
         readyToNavigateRef.current = true
       }
@@ -212,7 +212,7 @@ export default function LoadingPage() {
   // If generation finishes after the user already finished viewing deep dive content, navigate then
   useEffect(() => {
     if (readyToNavigateRef.current && projectIdRef.current) {
-      router.push(`/projects/${projectIdRef.current}`)
+      router.push(`/project/${projectIdRef.current}/step/1`)
     }
   }, [deepDive, deepDiveQuiz])
 
