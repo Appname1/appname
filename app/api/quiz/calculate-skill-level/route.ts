@@ -17,7 +17,6 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'unauthorized' }, { status: 401 })
     }
 
-    // Logic: mostly A/B = BEGINNER, mixed = INTERMEDIATE, mostly C/D = CONFIDENT
     const abCount = answers.filter((a: string) => a === 'A' || a === 'B').length
     const cdCount = answers.filter((a: string) => a === 'C' || a === 'D').length
 
@@ -30,14 +29,12 @@ export async function POST(request: Request) {
       skillLevel = 'INTERMEDIATE'
     }
 
-    const { error: updateError } = await supabase
-      .from('projects')
-      .update({ skill_level: skillLevel })
-      .eq('id', project_id)
-      .eq('user_id', user.id)
-
-    if (updateError) {
-      return NextResponse.json({ error: 'update_failed' }, { status: 500 })
+    if (project_id) {
+      await supabase
+        .from('projects')
+        .update({ skill_level: skillLevel })
+        .eq('id', project_id)
+        .eq('user_id', user.id)
     }
 
     return NextResponse.json({ skill_level: skillLevel })

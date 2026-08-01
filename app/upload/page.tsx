@@ -136,20 +136,16 @@ export default function UploadPage() {
     if (!canGenerate || !project) return
     setGenerating(true)
 
-    fetch('/api/generate', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        project_title: project.title,
-        domain: project.domain,
-        jd: sessionStorage.getItem('entry_jd') ?? '',
-        skills: project.tech_stack,
-        dataset_columns: columns,
-        dataset_name: fileName,
-        skill_level: 'BEGINNER',
-        is_case_study: project.is_case_study,
-      }),
-    }).catch(() => {})
+    sessionStorage.setItem('generate_request', JSON.stringify({
+      project_title: project.title,
+      domain: project.domain,
+      jd: sessionStorage.getItem('entry_jd') ?? '',
+      skills: project.tech_stack,
+      dataset_columns: columns,
+      dataset_name: fileName,
+      skill_level: 'BEGINNER',
+      is_case_study: project.is_case_study,
+    }))
 
     localStorage.removeItem('appname_selected_project')
     router.push('/loading')
