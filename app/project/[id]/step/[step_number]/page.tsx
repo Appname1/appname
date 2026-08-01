@@ -52,6 +52,8 @@ export default function StepPage() {
   const [columnsOpen, setColumnsOpen] = useState(false)
   const [activeTopic, setActiveTopic] = useState<string | null>(null)
   const [advancing, setAdvancing] = useState(false)
+  const [advanceError, setAdvanceError] = useState('')
+  const [quizAnswer, setQuizAnswer] = useState<string | null>(null)
 
   const codeRef = useRef<HTMLElement>(null)
   const breakdownRef = useRef<HTMLElement>(null)
@@ -145,23 +147,33 @@ export default function StepPage() {
 
   const handleNextStep = async () => {
     setAdvancing(true)
+    setAdvanceError('')
     try {
       const res = await fetch('/api/progress', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ project_id: projectId, step_number: stepNumber }),
       })
+      if (!res.ok) {
+        const errData = await res.json().catch(() => ({}))
+        setAdvanceError(errData.error || `Request failed (${res.status})`)
+        setAdvancing(false)
+        return
+      }
       const data = await res.json()
       if (data.is_complete) {
         router.push(`/project/${projectId}/complete`)
       } else if (data.next_step) {
         router.push(`/project/${projectId}/step/${data.next_step}`)
+      } else {
+        setAdvanceError('Unexpected response — no next step returned')
+        setAdvancing(false)
       }
-    } finally {
+    } catch (err) {
+      setAdvanceError(err instanceof Error ? err.message : 'Something went wrong')
       setAdvancing(false)
     }
   }
-
   if (!loaded) return null
 
   if (notFound || !project) {
@@ -410,15 +422,55 @@ export default function StepPage() {
           </p>
         )}
 
-        {/* 9. Step quiz (placeholder for now) */}
-        {hasQuiz ? (
+        {/* 9. Step quiz */}
+        {hasQuiz && (
           <div
-            className="rounded-xl p-6 border mb-8"
+            className="rounded-xl p-6 border mb-6"
             style={{ background: 'var(--white)', borderColor: 'var(--border)' }}
           >
-            <p className="text-sm" style={{ color: 'var(--muted)' }}>Quiz loading...</p>
+            <h3 className="text-sm font-semibold mb-4" style={{ color: 'var(--ink)' }}>
+              {step.quiz.question}
+            </h3>
+            <div className="space-y-2.5 mb-4">
+              {step.quiz.options.map((opt) => {
+                const letter = opt[0]
+                const showCorrect = quizAnswer && letter === step.quiz.correct
+                const showWrong = quizAnswer === letter && letter !== step.quiz.correct
+                return (
+                  <button
+                    key={opt}
+                    onClick={() => !quizAnswer && setQuizAnswer(letter)}
+                    disabled={!!quizAnswer}
+                    className="w-full text-left text-sm rounded-lg px-4 py-3 border transition-colors"
+                    style={{
+                      borderColor: showCorrect ? 'var(--accent)' : showWrong ? 'var(--muted)' : 'var(--border)',
+                      background: showCorrect ? 'var(--accent-bg)' : 'var(--paper)',
+                      color: 'var(--ink)',
+                    }}
+                  >
+                    {opt}
+                  </button>
+                )
+              })}
+            </div>
+            {quizAnswer && (
+              <div>
+                <p className="text-sm font-medium mb-1" style={{ color: 'var(--ink)' }}>
+                  {quizAnswer === step.quiz.correct ? 'Exactly right.' : 'Not quite —'}
+                </p>
+                <p className="text-sm" style={{ color: 'var(--muted)' }}>
+                  {step.quiz.explanation}
+                </p>
+              </div>
+            )}
           </div>
-        ) : null}
+        )}
+
+        {advanceError && (
+          <p className="text-sm mb-3" style={{ color: '#B94A48' }}>
+            {advanceError}
+          </p>
+        )}
 
         {/* 10. Next Step button */}
         <button
