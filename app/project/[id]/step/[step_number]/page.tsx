@@ -323,8 +323,28 @@ export default function StepPage() {
                     <div className="flex gap-2">
                       {(() => {
                         const pillStyle = { background: 'var(--tag-bg)', color: 'var(--ink)' }
+                        const KNOWN_DOCS: Record<string, string> = {
+                          pandas: 'https://pandas.pydata.org/docs/',
+                          numpy: 'https://numpy.org/doc/stable/',
+                          'scikit-learn': 'https://scikit-learn.org/stable/documentation.html',
+                          sklearn: 'https://scikit-learn.org/stable/documentation.html',
+                          tensorflow: 'https://www.tensorflow.org/api_docs',
+                          pytorch: 'https://pytorch.org/docs/stable/index.html',
+                          matplotlib: 'https://matplotlib.org/stable/index.html',
+                          seaborn: 'https://seaborn.pydata.org/',
+                          python: 'https://docs.python.org/3/',
+                          sql: 'https://www.w3schools.com/sql/',
+                          docker: 'https://docs.docker.com/',
+                          aws: 'https://docs.aws.amazon.com/',
+                          nltk: 'https://www.nltk.org/',
+                          langchain: 'https://python.langchain.com/docs/introduction/',
+                          xgboost: 'https://xgboost.readthedocs.io/',
+                          'power bi': 'https://learn.microsoft.com/en-us/power-bi/',
+                          tableau: 'https://help.tableau.com/current/pro/desktop/en-us/',
+                        }
+                        const topicKey = topic.toLowerCase().trim()
                         const ytUrl = 'https://www.youtube.com/results?search_query=' + encodeURIComponent(topic + ' tutorial')
-                        const docsUrl = 'https://www.google.com/search?q=' + encodeURIComponent(topic + ' documentation')
+                        const docsUrl = KNOWN_DOCS[topicKey] ?? ('https://www.google.com/search?q=' + encodeURIComponent(topic + ' documentation'))
                         return (
                           <>
                             <a href={ytUrl} target="_blank" rel="noopener noreferrer" className="text-xs font-medium rounded-md px-3 py-1.5" style={pillStyle}>

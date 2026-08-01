@@ -56,6 +56,8 @@ const TIPS = [
   'Every step ahead comes with real, working code — never a black box you just copy blindly.',
   "You'll get a short quiz after each step, just to check things actually stuck.",
   "By the end, you'll have interview talking points pulled straight from what you built.",
+  'More complex projects can take a minute or two to put together properly — we\'d rather get it right than rush it.',
+  'Almost there — this last part is worth the wait.',
 ]
 
 interface DatasetDeepDive {
@@ -81,6 +83,7 @@ export default function LoadingPage() {
   const [answers, setAnswers] = useState<string[]>([])
 
   const [tipIndex, setTipIndex] = useState(0)
+  const [waitSeconds, setWaitSeconds] = useState(0)
   const [deepDive, setDeepDive] = useState<DatasetDeepDive | null>(null)
   const [deepDiveQuiz, setDeepDiveQuiz] = useState<DeepDiveQuizQuestion[]>([])
   const [deepDiveSection, setDeepDiveSection] = useState(0) // 0=what it is, 1=columns, 2=patterns, 3=questions, then quiz
@@ -176,12 +179,17 @@ export default function LoadingPage() {
   // Rotate tips while waiting for generation + deep dive to become available
   useEffect(() => {
     if (phase !== 'deepdive_wait') return
-    const interval = setInterval(() => {
+    const tipInterval = setInterval(() => {
       setTipIndex((i) => (i + 1) % TIPS.length)
-    }, 4000)
-    return () => clearInterval(interval)
+    }, 6000)
+    const secondsInterval = setInterval(() => {
+      setWaitSeconds((s) => s + 1)
+    }, 1000)
+    return () => {
+      clearInterval(tipInterval)
+      clearInterval(secondsInterval)
+    }
   }, [phase])
-
   const advanceDeepDiveSection = () => {
     if (deepDiveSection < 3) {
       setDeepDiveSection(deepDiveSection + 1)
@@ -310,15 +318,21 @@ export default function LoadingPage() {
   }
 
   if (phase === 'deepdive_wait') {
+    const showLongWaitNote = waitSeconds > 45
     return (
       <div className="min-h-screen flex items-center justify-center" style={{ background: 'var(--paper)' }}>
         <div className="max-w-md px-6 text-center">
           <h1
-            className="text-xl font-bold mb-6"
+            className="text-xl font-bold mb-2"
             style={{ color: 'var(--ink)', fontFamily: 'var(--font-space-grotesk)' }}
           >
             Building your project...
           </h1>
+          <p className="text-xs mb-6" style={{ color: 'var(--muted)' }}>
+            {showLongWaitNote
+              ? "Complex projects take a bit longer — hang tight, it's still working."
+              : 'This usually takes 30 seconds to 2 minutes.'}
+          </p>
           <div
             className="rounded-2xl p-6 border"
             style={{ background: 'var(--white)', borderColor: 'var(--border)' }}
