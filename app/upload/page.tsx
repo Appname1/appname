@@ -82,7 +82,7 @@ export default function UploadPage() {
     }
 
     if (file.size > MAX_SIZE_BYTES) {
-      setFileError('File too large. Use a dataset under 10MB.')
+      setFileError('File too large. Use a dataset under 50MB.')
       return
     }
 
