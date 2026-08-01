@@ -58,15 +58,15 @@ Exact JSON structure:
   "interview_talking_points": [],
   "description_test_prompt": ""
 }
-
 Code rules: industry quality, real pandas/sklearn/matplotlib, executable in Google Colab.
 
 CODE RULE (applies to the "code" field itself, not just the explanation): when the logic involves iterating, filtering, or transforming data manually, write it using explicit for loops — NOT list comprehensions, lambda, map(), or filter(). This applies even when list comprehensions would be more idiomatic. Standard library/pandas/sklearn one-liners (e.g. train_test_split, model.fit, df.groupby) are fine as-is since they aren't manual iteration.
 
-beginner_breakdown: describe the explicit for-loop logic in plain English, explaining every variable name.
+beginner_breakdown is DIFFERENT from explanation. Do not blur them together:
+- beginner_breakdown: a literal, line-by-line walkthrough of what the code in THIS step does, written like a patient tutor talking a beginner through unfamiliar syntax. Reference actual variable names and actual lines from the code field. Use small concrete analogies for any non-obvious Python/data-science mechanic appearing in the code (e.g. if the code uses .map() for encoding, explain it like: "map() replaces each value using a lookup — like a dictionary: {'female': 1, 'male': 0} means every 'female' becomes 1"). If the code uses groupby, break down exactly what gets grouped and what the aggregation does, step by step. This should read like someone teaching a friend who has never seen this exact pattern before, not a summary paragraph.
+- explanation: 2-3 sentences on WHY this step exists in the project (the practical/business reason), not how the code works. This is the reasoning, not the mechanics.
 
-explanation: maximum 3 plain English sentences.
-
+topics_used: list the underlying Python and data-science CONCEPTS actually exercised in this step's code — not just library names. Include fundamentals like "Dictionaries", "Lists", "Loops", "Multiple assignment", "f-strings", "Functions", "Encoding", "List indexing" wherever the code actually uses them, in addition to any library name (e.g. "Pandas", "Scikit-learn") if relevant. A step using df["Sex"].map({...}) should list both "Dictionaries" and "Encoding", not just "Pandas".
 quiz: 4 options always, warm encouraging tone, never trick questions, correct can be any of A/B/C/D.
 
 Step count: generate exactly ${stepCount} steps for domain ${domain}.

@@ -83,7 +83,6 @@ export default function StepPage() {
       setProject(data.project_json)
       setLoaded(true)
 
-      // Track step progress + earn credits, only on first visit to this step
       const { data: existing } = await supabase
         .from('step_progress')
         .select('id')
@@ -116,7 +115,6 @@ export default function StepPage() {
     load()
   }, [projectId, stepNumber, router])
 
-  // Load highlight.js from CDN once, then highlight code blocks whenever content changes
   useEffect(() => {
     function highlightAll() {
       const w = window as unknown as { hljs?: { highlightElement: (el: Element) => void } }
@@ -174,6 +172,7 @@ export default function StepPage() {
       setAdvancing(false)
     }
   }
+
   if (!loaded) return null
 
   if (notFound || !project) {
@@ -216,7 +215,6 @@ export default function StepPage() {
 
   return (
     <div className="min-h-screen" style={{ background: 'var(--paper)' }}>
-      {/* 1. Sticky progress bar */}
       <div
         className="sticky top-0 z-10 border-b"
         style={{ background: 'var(--paper)', borderColor: 'var(--border)' }}
@@ -254,7 +252,6 @@ export default function StepPage() {
       </div>
 
       <div className="max-w-3xl mx-auto px-6 py-10">
-        {/* 2. Step title */}
         <h1
           className="text-2xl font-bold mb-6"
           style={{ color: 'var(--ink)', fontFamily: 'var(--font-space-grotesk)' }}
@@ -262,7 +259,6 @@ export default function StepPage() {
           {step.title}
         </h1>
 
-        {/* 3. Code block */}
         {hasCode ? (
           <pre className="rounded-xl overflow-x-auto mb-4" style={{ background: '#282c34' }}>
             <code ref={codeRef} className="language-python text-sm p-4 block">
@@ -278,7 +274,6 @@ export default function StepPage() {
           </div>
         )}
 
-        {/* 4. Collapsible breakdown */}
         {hasBreakdown && (
           <div className="mb-4">
             <button
@@ -289,20 +284,29 @@ export default function StepPage() {
               {breakdownOpen ? 'Hide breakdown' : 'Confused? Break it down'}
             </button>
             {breakdownOpen && (
-              <pre className="rounded-xl overflow-x-auto mt-3" style={{ background: '#282c34' }}>
-                <code ref={breakdownRef} className="language-plaintext text-sm p-4 block whitespace-pre-wrap">
-                  {step.beginner_breakdown}
-                </code>
-              </pre>
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-wide mt-3 mb-1" style={{ color: 'var(--muted)' }}>
+                  Code Breakdown
+                </p>
+                <pre className="rounded-xl overflow-x-auto" style={{ background: '#282c34' }}>
+                  <code ref={breakdownRef} className="language-plaintext text-sm p-4 block whitespace-pre-wrap">
+                    {step.beginner_breakdown}
+                  </code>
+                </pre>
+              </div>
             )}
           </div>
         )}
 
-        {/* 5. Plain English explanation */}
         {hasExplanation ? (
-          <p className="text-base leading-relaxed mb-6" style={{ color: 'var(--ink)' }}>
-            {step.explanation}
-          </p>
+          <div className="mb-6">
+            <p className="text-xs font-semibold uppercase tracking-wide mb-1" style={{ color: 'var(--muted)' }}>
+              Explanation
+            </p>
+            <p className="text-base leading-relaxed" style={{ color: 'var(--ink)' }}>
+              {step.explanation}
+            </p>
+          </div>
         ) : (
           <div
             className="rounded-xl p-4 mb-6 text-sm"
@@ -312,7 +316,6 @@ export default function StepPage() {
           </div>
         )}
 
-        {/* 6. Topic pills */}
         {step.topics_used && step.topics_used.length > 0 && (
           <div className="flex flex-wrap gap-2 mb-6 relative">
             {step.topics_used.map((topic) => (
@@ -353,6 +356,11 @@ export default function StepPage() {
                           xgboost: 'https://xgboost.readthedocs.io/',
                           'power bi': 'https://learn.microsoft.com/en-us/power-bi/',
                           tableau: 'https://help.tableau.com/current/pro/desktop/en-us/',
+                          dictionaries: 'https://docs.python.org/3/tutorial/datastructures.html#dictionaries',
+                          lists: 'https://docs.python.org/3/tutorial/datastructures.html',
+                          loops: 'https://docs.python.org/3/tutorial/controlflow.html#for-statements',
+                          functions: 'https://docs.python.org/3/tutorial/controlflow.html#defining-functions',
+                          encoding: 'https://scikit-learn.org/stable/modules/preprocessing.html#preprocessing-categorical-features',
                         }
                         const topicKey = topic.toLowerCase().trim()
                         const ytUrl = 'https://www.youtube.com/results?search_query=' + encodeURIComponent(topic + ' tutorial')
@@ -376,7 +384,6 @@ export default function StepPage() {
           </div>
         )}
 
-        {/* 7. CSV column reference */}
         {project.dataset_deep_dive && project.dataset_deep_dive.columns?.length > 0 && (
           <div className="mb-6">
             <button
@@ -415,14 +422,12 @@ export default function StepPage() {
           </div>
         )}
 
-        {/* 8. Variable suggestions */}
         {step.variable_suggestions && (
           <p className="text-xs mb-8" style={{ color: 'var(--muted)' }}>
             Suggested variable names: {step.variable_suggestions}
           </p>
         )}
 
-        {/* 9. Step quiz */}
         {hasQuiz && (
           <div
             className="rounded-xl p-6 border mb-6"
@@ -472,7 +477,6 @@ export default function StepPage() {
           </p>
         )}
 
-        {/* 10. Next Step button */}
         <button
           onClick={handleNextStep}
           disabled={advancing}
