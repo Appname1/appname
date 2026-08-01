@@ -260,11 +260,30 @@ export default function StepPage() {
         </h1>
 
         {hasCode ? (
-          <pre className="rounded-xl overflow-x-auto mb-4" style={{ background: '#282c34' }}>
-            <code ref={codeRef} className="language-python text-sm p-4 block">
-              {step.code}
-            </code>
-          </pre>
+          <div className="mb-4">
+            <pre className="rounded-xl overflow-x-auto" style={{ background: '#282c34' }}>
+              <code ref={codeRef} className="language-python text-sm p-4 block">
+                {step.code}
+              </code>
+            </pre>
+            <div className="flex items-center gap-3 mt-2">
+              <button
+                onClick={() => navigator.clipboard.writeText(step.code)}
+                className="text-xs font-medium rounded-md px-3 py-1.5 border"
+                style={{ borderColor: 'var(--border)', color: 'var(--ink)', background: 'var(--white)' }}
+              >
+                Copy code
+              </button>
+              {(() => {
+                const colabStyle = { background: 'var(--accent-bg)', color: 'var(--accent-dark)' }
+                return (
+                  <a href="https://colab.research.google.com/" target="_blank" rel="noopener noreferrer" className="text-xs font-medium rounded-md px-3 py-1.5" style={colabStyle}>
+                    Open Google Colab — try it yourself →
+                  </a>
+                )
+              })()}
+            </div>
+          </div>
         ) : (
           <div
             className="rounded-xl p-4 mb-4 text-sm"

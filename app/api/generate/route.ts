@@ -66,24 +66,34 @@ REQUIRED EARLY STEPS: for any project involving a DataFrame, the first 1-2 steps
 
 CODE RULE (applies to the "code" field itself, not just the explanation): when the logic involves iterating, filtering, or transforming data manually, write it using explicit for loops — NOT list comprehensions, lambda, map(), or filter(). This applies even when list comprehensions would be more idiomatic. Standard library/pandas/sklearn one-liners (e.g. train_test_split, model.fit, df.groupby) are fine as-is since they aren't manual iteration.
 
-beginner_breakdown MUST be a true line-by-line walkthrough for someone who has NEVER written Python before. Do NOT summarize what the code accomplishes — that belongs in "explanation", not here. Instead:
-- Go through the code field literally line by line, in order.
-- For each line, explain the exact syntax in plain words, as if teaching someone who doesn't know what a loop, function call, or method is.
-- Explicitly translate variable names used in that line (e.g. "df.columns is a list of every column name in df").
-- For any loop variable (like "c" in "for c in df.columns:"), explain: "c is just a name we made up to represent each item as we go through the list — you could call it anything, like 'col' or 'x'."
-- Note that variable names like df, c, or column names are arbitrary choices, not fixed keywords — the user could rename them.
-- Use short, concrete analogies for unfamiliar mechanics (dictionaries, encoding, groupby, etc.) exactly like explaining .map({'female':1,'male':0}) as "a lookup table — every 'female' becomes 1, every 'male' becomes 0."
+beginner_breakdown MUST be a true line-by-line walkthrough for someone who has NEVER written Python before and does not know what a function, argument, method, loop, or variable is. Do NOT summarize what the code accomplishes at a high level — that belongs in "explanation", not here.
 
-Example of the beginner_breakdown quality bar, for the code:
-for c in df.columns:
-    if df[c].dtype == 'object':
-        df[c] = df[c].astype('category')
+FORMAT REQUIREMENT: write beginner_breakdown as one short block PER LINE of code, in the exact order the lines appear, separated by newlines. Do not compress multiple lines into one summarizing sentence. Every single line in the code field must get its own explanation, even simple-looking ones.
 
-Correct beginner_breakdown for this: "for c in df.columns: — this starts a loop. df.columns is a list of every column name in your dataframe. c is just a name we made up to stand in for each column name, one at a time, as the loop runs — you could call it col or x instead, it doesn't matter. Then, if df[c].dtype == 'object': checks the data type of that column — object usually means it holds text. If that's true, df[c] = df[c].astype('category') replaces that column with a 'category' version of itself, which pandas and machine learning models handle better than plain text."
+For each line:
+- Quote or reference the literal code on that line.
+- If it's a function or method call (e.g. train_test_split(X, y, test_size=0.2)), explicitly define: "This is called a function — a reusable block of code someone already wrote. The stuff inside the parentheses (X, y, test_size=0.2) are called arguments — the specific inputs you're giving that function to work with."
+- If it's an assignment (e.g. X_train, X_test, y_train, y_test = ...), explain that the = sign stores the result on the right into the name(s) on the left, and that when there are multiple names separated by commas, the function is returning multiple pieces of data at once, one for each name in order.
+- If it's a loop, explain the loop variable is just a made-up name standing in for each item, one at a time, and that it could be renamed to anything.
+- If it's a dictionary, list, or method most beginners haven't seen, explain it with a small everyday analogy.
+- Never assume the reader knows what "the function returns X" or "we pass Y as an argument" means without first defining function/argument/return in plain words the first time they appear in this step.
+
+Two example patterns to match the required depth:
+
+Example A — a loop (code: "for c in df.columns:\n    if df[c].dtype == 'object':\n        df[c] = df[c].astype('category')"):
+"for c in df.columns: — this starts a loop, which means we repeat the next lines once for every item in a list. df.columns is a list of every column name in your dataframe. c is just a name we made up to stand in for each column name, one at a time, as the loop runs — you could call it col or x instead, it makes no difference.
+if df[c].dtype == 'object': — this checks the data type of that column. object usually means it holds text.
+df[c] = df[c].astype('category') — this replaces that column with a 'category' version of itself, which pandas and machine learning models handle better than plain text."
+
+Example B — a function call with multiple assignment (code: "X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)"):
+"train_test_split(...) — train_test_split is a function, which means it's a ready-made block of code someone already wrote that does a specific job for you — in this case, splitting data into a training portion and a testing portion. X, y, test_size=0.2, random_state=42 are called arguments — these are the specific pieces of information you're handing to the function so it knows what to work with: X is your input data, y is what you're trying to predict, test_size=0.2 means use 20% of the data for testing, and random_state=42 just makes sure you get the same random split every time you run this.
+X_train, X_test, y_train, y_test = ... — the = sign means 'store the result here'. Since train_test_split hands back four separate pieces of data at once, we list four names on the left, separated by commas, and each one automatically catches the matching piece of data in order."
+
+Match this depth and format for every line in every step. If a line is truly trivial (like a single import), a one-sentence explanation is fine — but never fall back to a paragraph-level summary for anything involving a function call, loop, or unfamiliar syntax.
 
 explanation: 2-3 sentences on WHY this step exists in the project (the practical/business reason), separate from beginner_breakdown.
 
-topics_used: the underlying Python and data-science CONCEPTS actually exercised in this step's code — not just library names. Include fundamentals like "Dictionaries", "Lists", "Loops", "Multiple assignment", "f-strings", "Functions", "Encoding", "List indexing" wherever the code actually uses them, alongside any library name (e.g. "Pandas") if relevant.
+
 quiz: 4 options always, warm encouraging tone, never trick questions, correct can be any of A/B/C/D.
 
 Step count: generate exactly ${stepCount} steps for domain ${domain}.
