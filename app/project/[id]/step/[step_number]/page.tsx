@@ -227,6 +227,9 @@ export default function StepPage() {
             <span className="text-xs font-medium" style={{ color: 'var(--muted)' }}>
               Step {stepNumber} of {totalSteps}
             </span>
+            <a href="/dashboard" className="text-xs font-medium" style={{ color: 'var(--muted)' }}>
+              ← Dashboard
+            </a>
           </div>
           <div className="h-1.5 rounded-full mb-3" style={{ background: 'var(--border)' }}>
             <div
@@ -391,69 +394,69 @@ export default function StepPage() {
               </a>
             </div>
             <div className="flex flex-wrap gap-2 relative">
-            {step.topics_used.map((topic) => (
-              <div key={topic} className="relative">
-                <button
-                  onClick={() => setActiveTopic(activeTopic === topic ? null : topic)}
-                  className="text-xs font-medium rounded-full px-3 py-1.5"
-                  style={{ background: 'var(--accent-bg)', color: 'var(--accent-dark)' }}
-                >
-                  {topic}
-                </button>
-                {activeTopic === topic && (
-                  <div
-                    className="absolute top-full left-0 mt-2 w-64 rounded-xl p-4 border shadow-lg z-20"
-                    style={{ background: 'var(--white)', borderColor: 'var(--border)' }}
+              {step.topics_used.map((topic) => (
+                <div key={topic} className="relative">
+                  <button
+                    onClick={() => setActiveTopic(activeTopic === topic ? null : topic)}
+                    className="text-xs font-medium rounded-full px-3 py-1.5"
+                    style={{ background: 'var(--accent-bg)', color: 'var(--accent-dark)' }}
                   >
-                    <p className="text-sm mb-3" style={{ color: 'var(--ink)' }}>
-                      {topic} is one of the core concepts used in this step.
-                    </p>
-                    <div className="flex gap-2">
-                      {(() => {
-                        const pillStyle = { background: 'var(--tag-bg)', color: 'var(--ink)' }
-                        const KNOWN_DOCS: Record<string, string> = {
-                          pandas: 'https://pandas.pydata.org/docs/',
-                          numpy: 'https://numpy.org/doc/stable/',
-                          'scikit-learn': 'https://scikit-learn.org/stable/documentation.html',
-                          sklearn: 'https://scikit-learn.org/stable/documentation.html',
-                          tensorflow: 'https://www.tensorflow.org/api_docs',
-                          pytorch: 'https://pytorch.org/docs/stable/index.html',
-                          matplotlib: 'https://matplotlib.org/stable/index.html',
-                          seaborn: 'https://seaborn.pydata.org/',
-                          python: 'https://docs.python.org/3/',
-                          sql: 'https://www.w3schools.com/sql/',
-                          docker: 'https://docs.docker.com/',
-                          aws: 'https://docs.aws.amazon.com/',
-                          nltk: 'https://www.nltk.org/',
-                          langchain: 'https://python.langchain.com/docs/introduction/',
-                          xgboost: 'https://xgboost.readthedocs.io/',
-                          'power bi': 'https://learn.microsoft.com/en-us/power-bi/',
-                          tableau: 'https://help.tableau.com/current/pro/desktop/en-us/',
-                          dictionaries: 'https://docs.python.org/3/tutorial/datastructures.html#dictionaries',
-                          lists: 'https://docs.python.org/3/tutorial/datastructures.html',
-                          loops: 'https://docs.python.org/3/tutorial/controlflow.html#for-statements',
-                          functions: 'https://docs.python.org/3/tutorial/controlflow.html#defining-functions',
-                          encoding: 'https://scikit-learn.org/stable/modules/preprocessing.html#preprocessing-categorical-features',
-                        }
-                        const topicKey = topic.toLowerCase().trim()
-                        const ytUrl = 'https://www.youtube.com/results?search_query=' + encodeURIComponent(topic + ' tutorial')
-                        const docsUrl = KNOWN_DOCS[topicKey] ?? ('https://www.google.com/search?q=' + encodeURIComponent(topic + ' documentation'))
-                        return (
-                          <>
-                            <a href={ytUrl} target="_blank" rel="noopener noreferrer" className="text-xs font-medium rounded-md px-3 py-1.5" style={pillStyle}>
-                              YouTube
-                            </a>
-                            <a href={docsUrl} target="_blank" rel="noopener noreferrer" className="text-xs font-medium rounded-md px-3 py-1.5" style={pillStyle}>
-                              Docs
-                            </a>
-                          </>
-                        )
-                      })()}
+                    {topic}
+                  </button>
+                  {activeTopic === topic && (
+                    <div
+                      className="absolute top-full left-0 mt-2 w-64 rounded-xl p-4 border shadow-lg z-20"
+                      style={{ background: 'var(--white)', borderColor: 'var(--border)' }}
+                    >
+                      <p className="text-sm mb-3" style={{ color: 'var(--ink)' }}>
+                        {topic} is one of the core concepts used in this step.
+                      </p>
+                      <div className="flex gap-2">
+                        {(() => {
+                          const pillStyle = { background: 'var(--tag-bg)', color: 'var(--ink)' }
+                          const KNOWN_DOCS: Record<string, string> = {
+                            pandas: 'https://pandas.pydata.org/docs/',
+                            numpy: 'https://numpy.org/doc/stable/',
+                            'scikit-learn': 'https://scikit-learn.org/stable/documentation.html',
+                            sklearn: 'https://scikit-learn.org/stable/documentation.html',
+                            tensorflow: 'https://www.tensorflow.org/api_docs',
+                            pytorch: 'https://pytorch.org/docs/stable/index.html',
+                            matplotlib: 'https://matplotlib.org/stable/index.html',
+                            seaborn: 'https://seaborn.pydata.org/',
+                            python: 'https://docs.python.org/3/',
+                            sql: 'https://www.w3schools.com/sql/',
+                            docker: 'https://docs.docker.com/',
+                            aws: 'https://docs.aws.amazon.com/',
+                            nltk: 'https://www.nltk.org/',
+                            langchain: 'https://python.langchain.com/docs/introduction/',
+                            xgboost: 'https://xgboost.readthedocs.io/',
+                            'power bi': 'https://learn.microsoft.com/en-us/power-bi/',
+                            tableau: 'https://help.tableau.com/current/pro/desktop/en-us/',
+                            dictionaries: 'https://docs.python.org/3/tutorial/datastructures.html#dictionaries',
+                            lists: 'https://docs.python.org/3/tutorial/datastructures.html',
+                            loops: 'https://docs.python.org/3/tutorial/controlflow.html#for-statements',
+                            functions: 'https://docs.python.org/3/tutorial/controlflow.html#defining-functions',
+                            encoding: 'https://scikit-learn.org/stable/modules/preprocessing.html#preprocessing-categorical-features',
+                          }
+                          const topicKey = topic.toLowerCase().trim()
+                          const ytUrl = 'https://www.youtube.com/results?search_query=' + encodeURIComponent(topic + ' tutorial')
+                          const docsUrl = KNOWN_DOCS[topicKey] ?? ('https://www.google.com/search?q=' + encodeURIComponent(topic + ' documentation'))
+                          return (
+                            <>
+                              <a href={ytUrl} target="_blank" rel="noopener noreferrer" className="text-xs font-medium rounded-md px-3 py-1.5" style={pillStyle}>
+                                YouTube
+                              </a>
+                              <a href={docsUrl} target="_blank" rel="noopener noreferrer" className="text-xs font-medium rounded-md px-3 py-1.5" style={pillStyle}>
+                                Docs
+                              </a>
+                            </>
+                          )
+                        })()}
+                      </div>
                     </div>
-                  </div>
-                )}
-              </div>
-            ))}
+                  )}
+                </div>
+              ))}
             </div>
           </div>
         )}

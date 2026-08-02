@@ -43,12 +43,17 @@ export default function ErrorHelpPage() {
   return (
     <div className="min-h-screen" style={{ background: 'var(--paper)' }}>
       <div className="max-w-2xl mx-auto px-6 py-16">
-        <h1
-          className="text-2xl font-bold mb-2"
-          style={{ color: 'var(--ink)', fontFamily: 'var(--font-space-grotesk)' }}
-        >
-          Stuck on an error?
-        </h1>
+        <div className="flex items-center justify-between mb-2">
+          <h1
+            className="text-2xl font-bold"
+            style={{ color: 'var(--ink)', fontFamily: 'var(--font-space-grotesk)' }}
+          >
+            Stuck on an error?
+          </h1>
+          <a href="/dashboard" className="text-xs font-medium" style={{ color: 'var(--muted)' }}>
+            ← Dashboard
+          </a>
+        </div>
         <p className="text-sm mb-8" style={{ color: 'var(--muted)' }}>
           Paste the error message you got, and the code that caused it if you have it. We&apos;ll break down what went wrong.
         </p>
