@@ -75,8 +75,19 @@ df['Sex'] = le.fit_transform(df['Sex']) → replaces the Sex column with number 
 for c in df.columns: → c is a made-up name for each column, one at a time"
 
 beginner_breakdown: the full deep-dive version, shown only if someone clicks "Still don't get it?" after reading breakdown_simple. This is where the full patient, first-principles teaching happens — define function/argument/return/loop the first time each appears, use analogies, go fully line by line as before. Someone who read breakdown_simple and is still lost should find real clarity here.
+expected_output: MUST be concrete and specific to the ACTUAL dataset and code in this step, never generic. This is a HARD requirement — reject any phrasing that sounds like a description of what output would look like rather than the output itself.
 
-expected_output: MUST be concrete and specific to the ACTUAL dataset and code in this step, never generic. For a df.head() call, write out 2-3 real-looking sample rows with real-looking values matching this project's actual columns. For df.shape, give a real-looking tuple like (1000, 12). For a print(f"Accuracy: {score}") style line, give a plausible specific number like "Accuracy: 0.84". For a plot, describe what the chart shows in one sentence (e.g. "A bar chart with 5 bars, tallest for 'Electronics'"). For an import line with no output, write "No output — this just loads the tools we'll use." Never write vague placeholder text like "the output will show the data" — always be concrete.
+BANNED PATTERNS (never write anything resembling these): "The dataset with X converted", "Shows the result of X", "The output will display Y", "A table showing Z". These are descriptions, not outputs, and are not acceptable.
+
+REQUIRED PATTERNS:
+- df.head() or similar → write 2-3 literal rows of fake-but-realistic data using this project's actual column names, formatted like a real pandas table output.
+- df.shape → a literal tuple, e.g. (1000, 21)
+- Any print(f"...") or accuracy/score output → a literal specific number, e.g. "Accuracy: 0.84"
+- LabelEncoder/astype/transform lines with no print → "No visible output — this line transforms df in place. You can check it worked by running df.head() again and seeing numbers instead of text in that column."
+- A plot → one literal sentence describing exactly what appears, e.g. "A bar chart with 2 bars: 'Male' around 340, 'Female' around 210."
+- An import line → "No output — this just loads the tools we'll use."
+
+Every expected_output must read like an actual result a learner would see on their screen, not a summary of what happened.
 
 quiz: 4 options always, warm encouraging tone, never trick questions, correct can be any of A/B/C/D.
 

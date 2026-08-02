@@ -323,14 +323,18 @@ export default function StepPage() {
             </button>
             {breakdownOpen && (
               <div>
-                <p className="text-xs font-semibold uppercase tracking-wide mt-3 mb-1" style={{ color: 'var(--muted)' }}>
-                  Quick Breakdown
-                </p>
-                <pre className="rounded-xl overflow-x-auto" style={{ background: '#282c34' }}>
-                  <code className="text-sm p-4 block whitespace-pre-wrap" style={{ color: '#e6e6e6' }}>
-                    {step.breakdown_simple}
-                  </code>
-                </pre>
+                {step.breakdown_simple && (
+                  <div>
+                    <p className="text-xs font-semibold uppercase tracking-wide mt-3 mb-1" style={{ color: 'var(--muted)' }}>
+                      Quick Breakdown
+                    </p>
+                    <pre className="rounded-xl overflow-x-auto" style={{ background: '#282c34' }}>
+                      <code className="text-sm p-4 block whitespace-pre-wrap" style={{ color: '#e6e6e6' }}>
+                        {step.breakdown_simple}
+                      </code>
+                    </pre>
+                  </div>
+                )}
                 {hasBreakdown && (
                   <div className="mt-3">
                     <button
@@ -338,7 +342,11 @@ export default function StepPage() {
                       className="text-xs font-medium underline"
                       style={{ color: 'var(--accent)' }}
                     >
-                      {deepBreakdownOpen ? 'Hide detailed breakdown' : "Still don't get it? Go deeper →"}
+                      {deepBreakdownOpen
+                        ? 'Hide detailed breakdown'
+                        : step.breakdown_simple
+                        ? "Still don't get it? Go deeper →"
+                        : 'Show breakdown →'}
                     </button>
                     {deepBreakdownOpen && (
                       <pre className="rounded-xl overflow-x-auto mt-3" style={{ background: '#282c34' }}>
