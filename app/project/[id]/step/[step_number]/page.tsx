@@ -15,6 +15,7 @@ interface StepData {
   step_number: number
   title: string
   code: string
+  breakdown_simple: string
   beginner_breakdown: string
   expected_output: string
   explanation: string
@@ -50,6 +51,7 @@ export default function StepPage() {
   const [loaded, setLoaded] = useState(false)
   const [notFound, setNotFound] = useState(false)
   const [breakdownOpen, setBreakdownOpen] = useState(false)
+  const [deepBreakdownOpen, setDeepBreakdownOpen] = useState(false)
   const [columnsOpen, setColumnsOpen] = useState(false)
   const [activeTopic, setActiveTopic] = useState<string | null>(null)
   const [advancing, setAdvancing] = useState(false)
@@ -225,9 +227,6 @@ export default function StepPage() {
             <span className="text-xs font-medium" style={{ color: 'var(--muted)' }}>
               Step {stepNumber} of {totalSteps}
             </span>
-            <a href="/help/error" className="text-xs font-medium" style={{ color: 'var(--accent)' }}>
-              Got an error? →
-            </a>
           </div>
           <div className="h-1.5 rounded-full mb-3" style={{ background: 'var(--border)' }}>
             <div
@@ -283,7 +282,7 @@ export default function StepPage() {
                 </pre>
               </div>
             )}
-            <div className="flex items-center gap-3 mt-2">
+            <div className="flex items-center gap-3 mt-2 flex-wrap">
               <button
                 onClick={() => navigator.clipboard.writeText(step.code)}
                 className="text-xs font-medium rounded-md px-3 py-1.5 border"
@@ -299,6 +298,9 @@ export default function StepPage() {
                   </a>
                 )
               })()}
+              <a href="/help/error" className="text-xs font-medium rounded-md px-3 py-1.5 border" style={{ borderColor: 'var(--border)', color: 'var(--ink)', background: 'var(--white)' }}>
+                Got an error? →
+              </a>
             </div>
           </div>
         ) : (
@@ -310,7 +312,7 @@ export default function StepPage() {
           </div>
         )}
 
-        {hasBreakdown && (
+        {(step.breakdown_simple || hasBreakdown) && (
           <div className="mb-4">
             <button
               onClick={() => setBreakdownOpen(!breakdownOpen)}
@@ -322,13 +324,31 @@ export default function StepPage() {
             {breakdownOpen && (
               <div>
                 <p className="text-xs font-semibold uppercase tracking-wide mt-3 mb-1" style={{ color: 'var(--muted)' }}>
-                  Code Breakdown
+                  Quick Breakdown
                 </p>
                 <pre className="rounded-xl overflow-x-auto" style={{ background: '#282c34' }}>
-                  <code ref={breakdownRef} className="language-plaintext text-sm p-4 block whitespace-pre-wrap">
-                    {step.beginner_breakdown}
+                  <code className="text-sm p-4 block whitespace-pre-wrap" style={{ color: '#e6e6e6' }}>
+                    {step.breakdown_simple}
                   </code>
                 </pre>
+                {hasBreakdown && (
+                  <div className="mt-3">
+                    <button
+                      onClick={() => setDeepBreakdownOpen(!deepBreakdownOpen)}
+                      className="text-xs font-medium underline"
+                      style={{ color: 'var(--accent)' }}
+                    >
+                      {deepBreakdownOpen ? 'Hide detailed breakdown' : "Still don't get it? Go deeper →"}
+                    </button>
+                    {deepBreakdownOpen && (
+                      <pre className="rounded-xl overflow-x-auto mt-3" style={{ background: '#282c34' }}>
+                        <code ref={breakdownRef} className="language-plaintext text-sm p-4 block whitespace-pre-wrap">
+                          {step.beginner_breakdown}
+                        </code>
+                      </pre>
+                    )}
+                  </div>
+                )}
               </div>
             )}
           </div>
@@ -353,7 +373,16 @@ export default function StepPage() {
         )}
 
         {step.topics_used && step.topics_used.length > 0 && (
-          <div className="flex flex-wrap gap-2 mb-6 relative">
+          <div className="mb-6">
+            <div className="flex items-center justify-between mb-2">
+              <p className="text-xs font-semibold uppercase tracking-wide" style={{ color: 'var(--muted)' }}>
+                Concepts used in this step
+              </p>
+              <a href="/learn" className="text-xs font-medium" style={{ color: 'var(--accent)' }}>
+                Browse all topics →
+              </a>
+            </div>
+            <div className="flex flex-wrap gap-2 relative">
             {step.topics_used.map((topic) => (
               <div key={topic} className="relative">
                 <button
@@ -417,6 +446,7 @@ export default function StepPage() {
                 )}
               </div>
             ))}
+            </div>
           </div>
         )}
 
@@ -456,12 +486,6 @@ export default function StepPage() {
               </div>
             )}
           </div>
-        )}
-
-        {step.variable_suggestions && (
-          <p className="text-xs mb-8" style={{ color: 'var(--muted)' }}>
-            Suggested variable names: {step.variable_suggestions}
-          </p>
         )}
 
         {hasQuiz && (
@@ -513,14 +537,25 @@ export default function StepPage() {
           </p>
         )}
 
-        <button
-          onClick={handleNextStep}
-          disabled={advancing}
-          className="w-full text-sm font-medium rounded-lg py-3 disabled:opacity-40"
-          style={{ background: 'var(--ink)', color: 'var(--paper)' }}
-        >
-          {advancing ? 'Saving...' : stepNumber >= totalSteps ? 'Finish Project' : 'Next Step'}
-        </button>
+        <div className="flex gap-3">
+          {stepNumber > 1 && (
+            <button
+              onClick={() => router.push(`/project/${projectId}/step/${stepNumber - 1}`)}
+              className="text-sm font-medium rounded-lg py-3 px-6"
+              style={{ background: 'var(--tag-bg)', color: 'var(--ink)' }}
+            >
+              ← Previous
+            </button>
+          )}
+          <button
+            onClick={handleNextStep}
+            disabled={advancing}
+            className="flex-1 text-sm font-medium rounded-lg py-3 disabled:opacity-40"
+            style={{ background: 'var(--ink)', color: 'var(--paper)' }}
+          >
+            {advancing ? 'Saving...' : stepNumber >= totalSteps ? 'Finish Project' : 'Next Step'}
+          </button>
+        </div>
       </div>
     </div>
   )
