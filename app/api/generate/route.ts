@@ -42,6 +42,7 @@ Exact JSON structure:
       "title": "",
       "code": "",
       "beginner_breakdown": "",
+      "expected_output": "",
       "explanation": "",
       "topics_used": [],
       "variable_suggestions": "",
@@ -92,6 +93,9 @@ X_train, X_test, y_train, y_test = ... — the = sign means 'store the result he
 Match this depth and format for every line in every step. If a line is truly trivial (like a single import), a one-sentence explanation is fine — but never fall back to a paragraph-level summary for anything involving a function call, loop, or unfamiliar syntax.
 
 explanation: 2-3 sentences on WHY this step exists in the project (the practical/business reason), separate from beginner_breakdown.
+VISUAL ANNOTATION RULE: within beginner_breakdown, when defining what a made-up name (loop variable, parameter name) stands for, use this exact inline arrow format so it's visually scannable: "c → just a made-up name standing in for each column, one at a time. Could be renamed to col or x." Use the → arrow specifically when pointing from a piece of code to its plain-English meaning, throughout the breakdown, not just once.
+
+expected_output: for every step, write what a learner should see appear if they run this exact code — e.g. actual sample rows for a df.head() call, the shape tuple for df.shape, "No output — this line just imports libraries" for an import line, or a plausible printed value for a print() statement. Keep it realistic and specific to the dataset in this project, not generic placeholder text.
 
 
 quiz: 4 options always, warm encouraging tone, never trick questions, correct can be any of A/B/C/D.

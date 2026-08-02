@@ -16,6 +16,7 @@ interface StepData {
   title: string
   code: string
   beginner_breakdown: string
+  expected_output: string
   explanation: string
   topics_used: string[]
   variable_suggestions: string
@@ -224,6 +225,9 @@ export default function StepPage() {
             <span className="text-xs font-medium" style={{ color: 'var(--muted)' }}>
               Step {stepNumber} of {totalSteps}
             </span>
+            <a href="/help/error" className="text-xs font-medium" style={{ color: 'var(--accent)' }}>
+              Got an error? →
+            </a>
           </div>
           <div className="h-1.5 rounded-full mb-3" style={{ background: 'var(--border)' }}>
             <div
@@ -266,6 +270,19 @@ export default function StepPage() {
                 {step.code}
               </code>
             </pre>
+            {step.expected_output && (
+              <div className="mt-2">
+                <p className="text-xs font-semibold uppercase tracking-wide mb-1" style={{ color: 'var(--muted)' }}>
+                  Expected Output
+                </p>
+                <pre
+                  className="rounded-lg p-3 text-xs overflow-x-auto border"
+                  style={{ background: 'var(--tag-bg)', color: 'var(--ink)', borderColor: 'var(--border)' }}
+                >
+                  {step.expected_output}
+                </pre>
+              </div>
+            )}
             <div className="flex items-center gap-3 mt-2">
               <button
                 onClick={() => navigator.clipboard.writeText(step.code)}
