@@ -1,6 +1,11 @@
 'use client'
-
 import { useState } from 'react'
+interface ErrorExplanation {
+  what_happened: string
+  why_it_happened: string
+  how_to_fix: string
+  corrected_code: string
+}
 <div className="flex items-center justify-between mb-2">
           <h1
             className="text-2xl font-bold"
@@ -12,14 +17,6 @@ import { useState } from 'react'
             ← Dashboard
           </a>
         </div>
-
-interface ErrorExplanation {
-  what_happened: string
-  why_it_happened: string
-  how_to_fix: string
-  corrected_code: string
-}
-
 export default function ErrorHelpPage() {
   const [errorMessage, setErrorMessage] = useState('')
   const [code, setCode] = useState('')
