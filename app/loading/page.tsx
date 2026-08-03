@@ -84,6 +84,7 @@ export default function LoadingPage() {
 
   const [tipIndex, setTipIndex] = useState(0)
   const [waitSeconds, setWaitSeconds] = useState(0)
+  const [genTimedOut, setGenTimedOut] = useState(false)
   const [deepDive, setDeepDive] = useState<DatasetDeepDive | null>(null)
   const [deepDiveQuiz, setDeepDiveQuiz] = useState<DeepDiveQuizQuestion[]>([])
   const [deepDiveSection, setDeepDiveSection] = useState(0) // 0=what it is, 1=columns, 2=patterns, 3=questions, then quiz
@@ -136,12 +137,19 @@ export default function LoadingPage() {
 
     const requestBody = { ...JSON.parse(raw), skill_level: skillLevel }
 
+    const controller = new AbortController()
+    const timeoutId = setTimeout(() => controller.abort(), 90000) // 90s hard cap
+
     fetch('/api/generate', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(requestBody),
+      signal: controller.signal,
     })
-      .then((res) => res.json())
+      .then((res) => {
+        clearTimeout(timeoutId)
+        return res.json()
+      })
       .then((data) => {
         if (data.error || !data.project_id) {
           generateFailedRef.current = true
@@ -152,6 +160,7 @@ export default function LoadingPage() {
         loadDeepDive(data.project_id)
       })
       .catch(() => {
+        clearTimeout(timeoutId)
         generateFailedRef.current = true
         setPhase('error')
       })
@@ -183,7 +192,13 @@ export default function LoadingPage() {
       setTipIndex((i) => (i + 1) % TIPS.length)
     }, 6000)
     const secondsInterval = setInterval(() => {
-      setWaitSeconds((s) => s + 1)
+      setWaitSeconds((s) => {
+        const next = s + 1
+        if (next >= 150) {
+          setGenTimedOut(true)
+        }
+        return next
+      })
     }, 1000)
     return () => {
       clearInterval(tipInterval)
@@ -241,17 +256,17 @@ export default function LoadingPage() {
       <div className="min-h-screen flex items-center justify-center" style={{ background: 'var(--paper)' }}>
         <div className="text-center max-w-sm px-6">
           <h1 className="text-xl font-bold mb-2" style={{ color: 'var(--ink)' }}>
-            Something went wrong
+            This is taking longer than expected
           </h1>
           <p className="text-sm mb-6" style={{ color: 'var(--muted)' }}>
-            We hit a snag generating your project. Let&apos;s try again.
+            Our servers might be busy right now. Give it a moment and try again — your credits haven&apos;t been used.
           </p>
           <button
             onClick={retry}
             className="text-sm font-medium rounded-lg px-5 py-2.5"
             style={{ background: 'var(--ink)', color: 'var(--paper)' }}
           >
-            Retry
+            Try again
           </button>
         </div>
       </div>
@@ -319,6 +334,29 @@ export default function LoadingPage() {
 
   if (phase === 'deepdive_wait') {
     const showLongWaitNote = waitSeconds > 45
+
+    if (genTimedOut) {
+      return (
+        <div className="min-h-screen flex items-center justify-center" style={{ background: 'var(--paper)' }}>
+          <div className="max-w-sm px-6 text-center">
+            <h1 className="text-xl font-bold mb-2" style={{ color: 'var(--ink)', fontFamily: 'var(--font-space-grotesk)' }}>
+              This is taking longer than usual
+            </h1>
+            <p className="text-sm mb-6" style={{ color: 'var(--muted)' }}>
+              Our servers might be busy right now. Please try again in a few minutes — nothing was lost.
+            </p>
+            <button
+              onClick={() => router.push('/dashboard')}
+              className="text-sm font-medium rounded-lg px-5 py-2.5"
+              style={{ background: 'var(--ink)', color: 'var(--paper)' }}
+            >
+              Back to Dashboard
+            </button>
+          </div>
+        </div>
+      )
+    }
+
     return (
       <div className="min-h-screen flex items-center justify-center" style={{ background: 'var(--paper)' }}>
         <div className="max-w-md px-6 text-center">

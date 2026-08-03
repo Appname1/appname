@@ -353,7 +353,7 @@ export default function StepPage() {
                     </button>
                     {deepBreakdownOpen && (
                       <pre className="rounded-xl overflow-x-auto mt-3" style={{ background: '#282c34' }}>
-                        <code ref={breakdownRef} className="language-plaintext text-sm p-4 block whitespace-pre-wrap">
+                        <code className="text-sm p-4 block whitespace-pre-wrap" style={{ color: '#e6e6e6' }}>
                           {step.beginner_breakdown}
                         </code>
                       </pre>

@@ -17,7 +17,7 @@ export default function Navbar({ creditBalance, userName }: NavbarProps) {
     { href: '/dashboard', label: 'Dashboard' },
     { href: '/projects', label: 'Projects' },
     { href: '/portfolio', label: 'Portfolio' },
-    { href: '/appearance', label: 'Appearance' },
+    { href: '/settings', label: 'Settings' },
   ]
 
   const initials = userName

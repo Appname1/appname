@@ -1,6 +1,17 @@
 'use client'
 
 import { useState } from 'react'
+<div className="flex items-center justify-between mb-2">
+          <h1
+            className="text-2xl font-bold"
+            style={{ color: 'var(--ink)', fontFamily: 'var(--font-space-grotesk)' }}
+          >
+            Stuck on an error?
+          </h1>
+          <a href="/dashboard" className="text-xs font-medium" style={{ color: 'var(--muted)' }}>
+            ← Dashboard
+          </a>
+        </div>
 
 interface ErrorExplanation {
   what_happened: string
