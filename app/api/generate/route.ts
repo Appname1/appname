@@ -5,7 +5,7 @@ import { createServerSupabaseClient } from '@/lib/supabase-server'
 const groq = new Groq({ apiKey: process.env.GROQ_API_KEY })
 
 const STEP_COUNTS: Record<string, number> = {
-  DA: 6,
+  DA: 8,
   DS: 7,
   ML: 8,
   AI_ENGINEER: 8,
@@ -68,7 +68,7 @@ REQUIRED EARLY STEPS: for any project involving a DataFrame, the first 1-2 steps
 DA DOMAIN STEP ALLOCATION RULE: if domain is "DA", the project MUST cover every skill the user selected (given in the message below) with real depth — never skip a selected skill entirely, and never let one skill (like Power BI alone) crowd out the others. Structure the steps like this:
 1. Always start with real Python EDA: import libraries, load the CSV into df, then df.head(), df.shape, df.info(), df.describe(), df.isnull().sum() — these are non-negotiable regardless of which other skills were selected.
 2. If "SQL" was selected: include 1-2 dedicated steps with real SQL queries (as a code block, using standard SQL syntax) — e.g. querying/aggregating the data as if it were loaded into a table, using SELECT, GROUP BY, WHERE, JOIN where relevant to this dataset. Do not skip this just because a BI tool was also selected.
-3. If "Power BI" or "Tableau" was selected: include 2-3 dedicated steps for dashboard-building. For these steps, set "code" to an empty string and instead write clear, concrete instructions in "explanation": which columns to use, what chart types to create (bar chart, line chart, KPI cards, slicers), and what business question each visual answers. Set "beginner_breakdown" to a step-by-step walkthrough of the actual tool workflow (e.g. "open Power BI Desktop → Get Data → import your CSV → drag [column] to the X-axis..."). Quiz for these steps should test dashboard/BI concepts, not Python syntax.
+3. If "Power BI" or "Tableau" was selected: include 2-3 dedicated steps for dashboard-building. For these steps, set "code" to an empty string. "explanation" must be a NUMBERED list of concrete clicks/actions, specific enough to follow without needing a screenshot — e.g. "1. Open Power BI Desktop. 2. Click Get Data > Text/CSV. 3. Select your file and click Load. 4. Drag 'purpose' to the X-axis of a new Clustered Column Chart. 5. Drag 'loan_amount' to the Y-axis, set aggregation to Average." Never write a single vague sentence like "we build a dashboard" — always the literal numbered click sequence. "beginner_breakdown" should restate the same sequence in even more basic terms for someone who has never opened the tool before, still using the → arrow format for anything unfamiliar (e.g. "Get Data → the button that lets you import a file into Power BI").
 4. Distribute the fixed step count (6 for DA) across whichever of these categories the user actually selected — do not let any selected skill end up with zero steps. If the user selected Python, SQL, and Power BI together, aim for roughly: 2 Python EDA steps, 1-2 SQL steps, 2-3 Power BI steps, adjusting to fit exactly 6 total.
 CODE RULE (applies to the "code" field itself, not just the explanation): when the logic involves iterating, filtering, or transforming data manually, write it using explicit for loops — NOT list comprehensions, lambda, map(), or filter(). This applies even when list comprehensions would be more idiomatic. Standard library/pandas/sklearn one-liners (e.g. train_test_split, model.fit, df.groupby) are fine as-is since they aren't manual iteration.
 There are now TWO breakdown fields, at different depths:

@@ -311,7 +311,16 @@ export default function StepPage() {
             className="rounded-xl p-4 mb-4 text-sm"
             style={{ background: 'var(--accent-bg)', color: 'var(--accent-dark)' }}
           >
-            No code for this step — follow the instructions below instead.
+            <p className="mb-2">No code for this step — follow the numbered instructions below.</p>
+            {(() => {
+              const vidUrl = 'https://www.youtube.com/results?search_query=' + encodeURIComponent(step.title + ' Power BI step by step tutorial')
+              const linkStyle = { color: 'var(--accent-dark)' }
+              return (
+                <a href={vidUrl} target="_blank" rel="noopener noreferrer" className="text-xs font-medium underline" style={linkStyle}>
+                  Watch a video walkthrough of this exact step →
+                </a>
+              )
+            })()}
           </div>
         )}
 
