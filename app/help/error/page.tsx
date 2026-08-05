@@ -1,22 +1,14 @@
 'use client'
+
 import { useState } from 'react'
+
 interface ErrorExplanation {
   what_happened: string
   why_it_happened: string
   how_to_fix: string
   corrected_code: string
 }
-<div className="flex items-center justify-between mb-2">
-          <h1
-            className="text-2xl font-bold"
-            style={{ color: 'var(--ink)', fontFamily: 'var(--font-space-grotesk)' }}
-          >
-            Stuck on an error?
-          </h1>
-          <a href="/dashboard" className="text-xs font-medium" style={{ color: 'var(--muted)' }}>
-            ← Dashboard
-          </a>
-        </div>
+
 export default function ErrorHelpPage() {
   const [errorMessage, setErrorMessage] = useState('')
   const [code, setCode] = useState('')
@@ -59,7 +51,7 @@ export default function ErrorHelpPage() {
             Stuck on an error?
           </h1>
           <a href="/dashboard" className="text-xs font-medium" style={{ color: 'var(--muted)' }}>
-            ← Dashboard
+            Back to Dashboard
           </a>
         </div>
         <p className="text-sm mb-8" style={{ color: 'var(--muted)' }}>
