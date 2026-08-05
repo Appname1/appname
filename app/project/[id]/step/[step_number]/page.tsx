@@ -301,10 +301,17 @@ export default function StepPage() {
                   </a>
                 )
               })()}
-              <a href="/help/error" className="text-xs font-medium rounded-md px-3 py-1.5 border" style={{ borderColor: 'var(--border)', color: 'var(--ink)', background: 'var(--white)' }}>
+              <a href={`/help/error?project=${projectId}&step=${stepNumber}`} className="text-xs font-medium rounded-md px-3 py-1.5 border" style={{ borderColor: 'var(--border)', color: 'var(--ink)', background: 'var(--white)' }}>
                 Got an error? →
               </a>
             </div>
+          </div>
+        ) : stepNumber === totalSteps ? (
+          <div
+            className="rounded-xl p-4 mb-4 text-sm"
+            style={{ background: 'var(--accent-bg)', color: 'var(--accent-dark)' }}
+          >
+            This is a wrap-up step — no code needed here, just a reflection on what you built.
           </div>
         ) : (
           <div

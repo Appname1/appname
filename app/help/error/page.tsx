@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { useSearchParams } from 'next/navigation'
 
 interface ErrorExplanation {
   what_happened: string
@@ -8,8 +9,12 @@ interface ErrorExplanation {
   how_to_fix: string
   corrected_code: string
 }
-
 export default function ErrorHelpPage() {
+  const searchParams = useSearchParams()
+  const projectId = searchParams.get('project')
+  const step = searchParams.get('step')
+  const backHref = projectId && step ? `/project/${projectId}/step/${step}` : '/dashboard'
+
   const [errorMessage, setErrorMessage] = useState('')
   const [code, setCode] = useState('')
   const [loading, setLoading] = useState(false)
@@ -50,8 +55,8 @@ export default function ErrorHelpPage() {
           >
             Stuck on an error?
           </h1>
-          <a href="/dashboard" className="text-xs font-medium" style={{ color: 'var(--muted)' }}>
-            Back to Dashboard
+          <a href={backHref} className="text-xs font-medium" style={{ color: 'var(--muted)' }}>
+            {projectId && step ? `← Back to Step ${step}` : '← Dashboard'}
           </a>
         </div>
         <p className="text-sm mb-8" style={{ color: 'var(--muted)' }}>
