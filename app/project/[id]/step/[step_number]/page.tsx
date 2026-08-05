@@ -306,19 +306,12 @@ export default function StepPage() {
               </a>
             </div>
           </div>
-        ) : stepNumber === totalSteps ? (
+        ) : (
           <div
             className="rounded-xl p-4 mb-4 text-sm"
             style={{ background: 'var(--accent-bg)', color: 'var(--accent-dark)' }}
           >
-            This is a wrap-up step — no code needed here, just a reflection on what you built.
-          </div>
-        ) : (
-          <div
-            className="rounded-xl p-4 mb-4 text-sm"
-            style={{ background: 'var(--tag-bg)', color: 'var(--muted)' }}
-          >
-            Code unavailable for this step — try refreshing
+            No code for this step — follow the instructions below instead.
           </div>
         )}
 

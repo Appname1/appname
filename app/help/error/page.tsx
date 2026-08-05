@@ -55,9 +55,16 @@ export default function ErrorHelpPage() {
           >
             Stuck on an error?
           </h1>
-          <a href={backHref} className="text-xs font-medium" style={{ color: 'var(--muted)' }}>
-            {projectId && step ? `← Back to Step ${step}` : '← Dashboard'}
-          </a>
+          <div className="flex items-center gap-3">
+            {projectId && step && (
+              <a href={backHref} className="text-xs font-medium" style={{ color: 'var(--muted)' }}>
+                ← Back to Step {step}
+              </a>
+            )}
+            <a href="/dashboard" className="text-xs font-medium" style={{ color: 'var(--muted)' }}>
+              Dashboard
+            </a>
+          </div>
         </div>
         <p className="text-sm mb-8" style={{ color: 'var(--muted)' }}>
           Paste the error message you got, and the code that caused it if you have it. We&apos;ll break down what went wrong.
