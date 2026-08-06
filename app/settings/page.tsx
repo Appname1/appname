@@ -1,8 +1,6 @@
 export default function SettingsPage() {
   const links = [
     { label: 'Appearance', href: '/appearance', desc: 'Pick a color theme for the app' },
-    { label: 'Projects', href: '/projects', desc: "See everything you've built" },
-    { label: 'Portfolio', href: '/portfolio', desc: 'Your public-facing project showcase' },
     { label: 'Help with an error', href: '/help/error', desc: 'Get unstuck on a code error' },
     { label: 'Topic reference', href: '/learn', desc: 'Docs for every concept across your projects' },
     { label: 'Terms & Conditions', href: '/terms', desc: 'Legal terms for using bornout' },
