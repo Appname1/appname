@@ -1,7 +1,6 @@
 import { createServerSupabaseClient } from '@/lib/supabase-server'
 import { redirect } from 'next/navigation'
 import Navbar from '@/components/Navbar'
-import { BranchIcon, StackedCardsIcon, BadgeIcon, ProgressRingIcon } from '@/components/Icons'
 
 export default async function DashboardPage() {
   const supabase = createServerSupabaseClient()
@@ -25,7 +24,6 @@ export default async function DashboardPage() {
 
   const activeProject = projects?.[0]
   const displayName = profile?.name?.split(' ')[0] || 'there'
-  const totalProjects = projects?.length ?? 0
   const completedCount = profile?.total_projects_completed ?? 0
 
   let continueStep = 1
@@ -44,11 +42,22 @@ export default async function DashboardPage() {
     }
   }
 
-  const totalStepsForActive = activeProject?.project_json?.steps?.length ?? 0
-  const progressPct = totalStepsForActive > 0 ? Math.min(100, Math.round(((continueStep - 1) / totalStepsForActive) * 100)) : 0
-  const continueHref = activeProject ? `/project/${activeProject.id}/step/${continueStep}` : '#'
+  const totalStepsForActive: number = activeProject?.project_json?.steps?.length ?? 0
+  const stepList = totalStepsForActive > 0
+    ? Array.from({ length: totalStepsForActive }, (_, i) => i + 1)
+    : []
+  const continueHref = activeProject ? `/project/${activeProject.id}/step/${continueStep}` : '/entry'
 
-  const whiteCard = { background: 'var(--white)', borderColor: 'var(--border)' }
+  // Ring math: circumference for r=21 is ~132
+  const CIRC = 132
+  const completedRingCap = 10 // decorative cap so the ring has meaning without an arbitrary infinite scale
+  const completedPct = Math.min(1, completedCount / completedRingCap)
+  const completedOffset = CIRC - completedPct * CIRC
+
+  const activeProgressPct = totalStepsForActive > 0 ? (continueStep - 1) / totalStepsForActive : 0
+  const activeOffset = CIRC - activeProgressPct * CIRC
+
+  const cardStyle = { background: 'var(--white)', borderColor: 'var(--border)' }
 
   return (
     <div className="min-h-screen" style={{ background: 'var(--paper)' }}>
@@ -57,123 +66,137 @@ export default async function DashboardPage() {
         userName={profile?.name ?? ''}
       />
 
-      <div className="max-w-6xl mx-auto px-6 py-10">
+      <div className="max-w-2xl mx-auto px-6 py-14">
         <h1 className="text-2xl font-bold mb-1" style={{ color: 'var(--ink)' }}>
           Hi {displayName},
         </h1>
-        <p className="mb-8" style={{ color: 'var(--muted)' }}>
-          {activeProject ? 'Pick up where you left off.' : "Let's build something you can show off."}
+        <p className="mb-9" style={{ color: 'var(--muted)' }}>
+          Let&apos;s build something you can show off.
         </p>
 
-        {/* Bento hero: big CTA + 2 stacked stat tiles, matching landing page pattern */}
-        <div className="grid grid-cols-1 lg:grid-cols-[1.6fr_1fr] gap-5 mb-8">
-          <a href="/entry" className="rounded-2xl p-10 flex flex-col justify-center border transition-transform hover:scale-[1.01]" style={{ background: 'var(--white)', borderColor: 'var(--border)' }}>
-            <div className="flex items-center gap-5">
-              <div className="w-16 h-16 rounded-2xl flex items-center justify-center shrink-0" style={{ background: 'var(--accent-bg)' }}>
-                <BranchIcon size={32} />
-              </div>
-              <div>
-                <p className="text-xl font-bold mb-1" style={{ color: 'var(--ink)', fontFamily: 'var(--font-space-grotesk)' }}>
-                  Start a new project
-                </p>
-                <p className="text-sm" style={{ color: 'var(--muted)' }}>
-                  From a job description, a role, or your own idea
-                </p>
-              </div>
-            </div>
+        {/* Today's project / active project — wayfinding route icon */}
+        <div className="rounded-2xl p-6 border mb-8 flex items-center gap-4" style={cardStyle}>
+          <svg width="36" height="36" viewBox="0 0 40 40" fill="none" className="shrink-0">
+            <path d="M6 30 Q14 30 16 22 Q18 14 26 14 Q32 14 32 8" stroke="var(--muted)" strokeWidth="2" strokeDasharray="1 4.2" strokeLinecap="round" />
+            <circle cx="6" cy="30" r="2.6" fill="var(--ink)" fillOpacity="0.55" />
+            <path d="M32 4 l4 4 l-4 4 l0 -3 l-3 0 l0 -2 l3 0 z" fill="var(--accent)" />
+          </svg>
+          <div className="flex-1 min-w-0">
+            <p className="text-xs font-semibold uppercase tracking-wide mb-0.5" style={{ color: 'var(--accent)' }}>
+              {activeProject ? "Today's project" : 'No active project'}
+            </p>
+            <p className="text-base font-semibold truncate" style={{ color: 'var(--ink)' }}>
+              {activeProject ? (activeProject.project_json?.project_title || 'Untitled project') : "Pick one when you're ready"}
+            </p>
+            <p className="text-xs" style={{ color: 'var(--muted)' }}>
+              {activeProject ? `${activeProject.domain} · continuing at step ${continueStep}` : 'No pressure — browse a role or paste a JD'}
+            </p>
+          </div>
+          <a href={continueHref} className="text-sm font-medium rounded-lg px-4 py-2 shrink-0" style={{ background: 'var(--ink)', color: 'var(--paper)' }}>
+            {activeProject ? 'Continue' : 'Start'}
           </a>
+        </div>
 
-          <div className="flex flex-col gap-5">
-            <div className="rounded-2xl p-5 flex-1 flex items-center gap-4" style={{ background: 'var(--accent-bg)', border: '1px solid var(--border)' }}>
-              <div className="w-11 h-11 rounded-xl flex items-center justify-center shrink-0" style={{ background: 'var(--white)' }}>
-                <ProgressRingIcon size={22} />
-              </div>
-              <div>
-                <p className="text-xs font-medium mb-0.5" style={{ color: 'var(--accent-dark)' }}>Credit balance</p>
-                <p className="text-2xl font-bold" style={{ color: 'var(--ink)', fontFamily: 'var(--font-space-grotesk)' }}>
-                  {profile?.credit_balance ?? 0}
-                </p>
-              </div>
+        {/* Progress rings: active project completion + total projects completed */}
+        <div className="grid grid-cols-2 gap-4 mb-8">
+          <div className="rounded-2xl p-5 border flex items-center gap-4" style={cardStyle}>
+            <svg width="52" height="52" viewBox="0 0 52 52">
+              <circle cx="26" cy="26" r="21" stroke="var(--border)" strokeWidth="5" fill="none" />
+              <circle
+                cx="26" cy="26" r="21" stroke="var(--accent)" strokeWidth="5" fill="none"
+                strokeDasharray={CIRC} strokeDashoffset={totalStepsForActive > 0 ? activeOffset : CIRC}
+                strokeLinecap="round" transform="rotate(-90 26 26)"
+              />
+            </svg>
+            <div>
+              <p className="text-2xl font-bold leading-none" style={{ color: 'var(--ink)', fontFamily: 'var(--font-space-grotesk)' }}>
+                {profile?.credit_balance ?? 0}
+              </p>
+              <p className="text-xs mt-1" style={{ color: 'var(--muted)' }}>Credits</p>
+              <a href="/credits/topup" className="text-xs font-medium" style={{ color: 'var(--accent)' }}>
+                Top up →
+              </a>
             </div>
-            <div className="rounded-2xl p-5 flex-1 flex items-center gap-4" style={{ background: 'var(--green-bg)', border: '1px solid var(--border)' }}>
-              <div className="w-11 h-11 rounded-xl flex items-center justify-center shrink-0" style={{ background: 'var(--white)' }}>
-                <BadgeIcon size={22} />
-              </div>
-              <div>
-                <p className="text-xs font-medium mb-0.5" style={{ color: 'var(--green-dark)' }}>Projects completed</p>
-                <p className="text-2xl font-bold" style={{ color: 'var(--ink)', fontFamily: 'var(--font-space-grotesk)' }}>
-                  {completedCount}
-                </p>
-              </div>
+          </div>
+
+          <div className="rounded-2xl p-5 border flex items-center gap-4" style={cardStyle}>
+            <svg width="52" height="52" viewBox="0 0 52 52">
+              <circle cx="26" cy="26" r="21" stroke="var(--border)" strokeWidth="5" fill="none" />
+              <circle
+                cx="26" cy="26" r="21" stroke="var(--green)" strokeWidth="5" fill="none"
+                strokeDasharray={CIRC} strokeDashoffset={completedOffset}
+                strokeLinecap="round" transform="rotate(-90 26 26)"
+              />
+            </svg>
+            <div>
+              <p className="text-2xl font-bold leading-none" style={{ color: 'var(--ink)', fontFamily: 'var(--font-space-grotesk)' }}>
+                {completedCount}
+              </p>
+              <p className="text-xs mt-1" style={{ color: 'var(--muted)' }}>Completed</p>
             </div>
           </div>
         </div>
 
-        {activeProject && (
-          <div className="rounded-2xl p-6 mb-8 border" style={whiteCard}>
-            <div className="flex items-center justify-between mb-3">
-              <span className="text-xs font-semibold rounded-full px-2.5 py-1" style={{ color: 'var(--accent)', background: 'var(--accent-bg)' }}>
-                {activeProject.domain}
-              </span>
-              <span className="text-xs" style={{ color: 'var(--muted)' }}>
-                {progressPct}% complete
-              </span>
+        {/* Node graph: step path for active project */}
+        {activeProject && stepList.length > 0 && (
+          <div className="rounded-2xl p-6 border mb-8" style={cardStyle}>
+            <p className="text-xs font-semibold uppercase tracking-wide mb-4" style={{ color: 'var(--muted)' }}>
+              Your path on this project
+            </p>
+            <div className="flex items-center">
+              {stepList.map((n, i) => {
+                const isDone = n < continueStep
+                const isCurrent = n === continueStep
+                const nodeColor = isDone ? 'var(--green)' : isCurrent ? 'var(--accent)' : 'var(--border)'
+                return (
+                  <div key={n} className="flex items-center" style={{ flex: i === stepList.length - 1 ? '0 0 auto' : '1 1 auto' }}>
+                    <div
+                      className="rounded-full shrink-0"
+                      style={{
+                        width: isCurrent ? 14 : 10,
+                        height: isCurrent ? 14 : 10,
+                        background: nodeColor,
+                        border: isCurrent ? '2px solid var(--accent-bg)' : 'none',
+                      }}
+                    />
+                    {i < stepList.length - 1 && (
+                      <div className="flex-1 h-0.5 mx-1" style={{ background: isDone ? 'var(--green)' : 'var(--border)' }} />
+                    )}
+                  </div>
+                )
+              })}
             </div>
-            <h2 className="text-xl font-bold mb-3" style={{ color: 'var(--ink)' }}>
-              {activeProject.project_json?.project_title || 'Untitled project'}
-            </h2>
-            <div className="h-2 rounded-full mb-4" style={{ background: 'var(--border)' }}>
-              <div className="h-2 rounded-full transition-all" style={{ width: `${progressPct}%`, background: 'var(--accent)' }} />
+            <div className="flex justify-between mt-2">
+              <span className="text-xs" style={{ color: 'var(--muted)' }}>Step 1</span>
+              <span className="text-xs" style={{ color: 'var(--muted)' }}>Step {totalStepsForActive}</span>
             </div>
-            <a href={continueHref} className="inline-block text-sm font-medium rounded-lg px-5 py-2.5" style={{ background: 'var(--ink)', color: 'var(--paper)' }}>
-              Continue
-            </a>
           </div>
         )}
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-10">
-          <a href="/projects" className="rounded-2xl p-6 border flex items-center gap-4" style={whiteCard}>
-            <div className="w-12 h-12 rounded-xl flex items-center justify-center shrink-0" style={{ background: 'var(--tag-bg)' }}>
-              <StackedCardsIcon size={24} />
-            </div>
-            <div>
-              <p className="text-sm font-semibold" style={{ color: 'var(--ink)' }}>My Projects</p>
-              <p className="text-xs" style={{ color: 'var(--muted)' }}>
-                {totalProjects} project{totalProjects === 1 ? '' : 's'} so far
-              </p>
-            </div>
-          </a>
-          <a href="/portfolio" className="rounded-2xl p-6 border flex items-center gap-4" style={whiteCard}>
-            <div className="w-12 h-12 rounded-xl flex items-center justify-center shrink-0" style={{ background: 'var(--tag-bg)' }}>
-              <BadgeIcon size={24} />
-            </div>
-            <div>
-              <p className="text-sm font-semibold" style={{ color: 'var(--ink)' }}>Portfolio</p>
-              <p className="text-xs" style={{ color: 'var(--muted)' }}>Your public-facing showcase</p>
-            </div>
-          </a>
+        {/* Quick links */}
+        <div className="flex gap-6 mb-10 text-sm">
+          <a href="/projects" style={{ color: 'var(--accent)' }}>My Projects →</a>
+          <a href="/portfolio" style={{ color: 'var(--accent)' }}>Portfolio →</a>
         </div>
 
-        <h3 className="text-sm font-semibold uppercase tracking-wide mb-4" style={{ color: 'var(--muted)' }}>
-          Recent Projects
-        </h3>
-        {projects && projects.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {projects.slice(0, 4).map((p) => (
-              <a key={p.id} href={`/project/${p.id}/step/1`} className="block rounded-lg p-4 border" style={whiteCard}>
-                <span className="text-xs font-semibold" style={{ color: 'var(--accent)' }}>
-                  {p.domain}
-                </span>
-                <p className="text-sm font-medium mt-1" style={{ color: 'var(--ink)' }}>
-                  {p.project_json?.project_title || 'Untitled project'}
-                </p>
-              </a>
-            ))}
+        {projects && projects.length > 1 && (
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-wide mb-4" style={{ color: 'var(--muted)' }}>
+              Recent Projects
+            </p>
+            <div className="space-y-3">
+              {projects.slice(1, 5).map((p) => (
+                <a key={p.id} href={`/project/${p.id}/step/1`} className="flex items-baseline justify-between py-2" style={{ borderBottom: '1px solid var(--border)' }}>
+                  <span className="text-sm" style={{ color: 'var(--ink)' }}>
+                    {p.project_json?.project_title || 'Untitled project'}
+                  </span>
+                  <span className="text-xs" style={{ color: 'var(--muted)' }}>
+                    {p.domain}
+                  </span>
+                </a>
+              ))}
+            </div>
           </div>
-        ) : (
-          <p className="text-sm" style={{ color: 'var(--muted)' }}>
-            Nothing here yet — your first project will show up once you build one.
-          </p>
         )}
       </div>
     </div>
