@@ -14,18 +14,9 @@ interface StepData {
 
 interface ProjectJson {
   project_title: string
+  domain: string
   steps: StepData[]
 }
-
-const GENERAL_STEPS = [
-  { title: 'Step 1: Open your BI tool', body: 'Open Power BI Desktop (Windows, free download from Microsoft) or Tableau Public/Desktop. Both let you import a CSV and build charts without writing code.' },
-  { title: 'Step 2: Import your data', body: 'In Power BI: click "Get Data" on the Home ribbon, choose "Text/CSV," select your file, then click "Load." In Tableau: click "Connect" on the start screen, choose "Text file," and select your CSV.' },
-  { title: 'Step 3: Check your data types', body: 'Click on each column header. Make sure dates are recognized as dates, numbers as numbers, and text as text. Fix any that were auto-detected wrong — this affects how charts group and sort your data.' },
-  { title: 'Step 4: Build your first visual', body: 'Drag a categorical column (like a product name or region) onto a new Bar Chart or Column Chart. Drag a numeric column (like sales amount) onto the value axis. The chart builds itself as you drag.' },
-  { title: 'Step 5: Add filters and slicers', body: 'Drag a column you want to filter by (like a date or category) into the Filters pane (Power BI) or onto the Filters shelf (Tableau). This lets anyone viewing the dashboard narrow down what they see.' },
-  { title: 'Step 6: Add KPI cards', body: 'For key numbers (like total revenue or average order size), use a Card visual (Power BI) or a Text/Number tile (Tableau) to show a single big number at a glance.' },
-  { title: 'Step 7: Arrange and publish', body: 'Resize and position your visuals on the canvas so related charts sit together. When ready, use File > Publish (Power BI, needs a free Power BI account) or Server > Publish Workbook (Tableau Public, free) to share it.' },
-]
 
 export default function DashboardGuidePage() {
   const params = useParams()
@@ -71,39 +62,38 @@ export default function DashboardGuidePage() {
           Dashboard building guide
         </h1>
         <p className="text-sm mb-10" style={{ color: 'var(--muted)' }}>
-          A general walkthrough of Power BI / Tableau, plus this project&apos;s specific steps in one place.
+          {project?.project_title ? `Every dashboard step for "${project.project_title}," in one place.` : 'Your dashboard steps for this project.'}
         </p>
 
-        <h2 className="text-sm font-semibold uppercase tracking-wide mb-4" style={{ color: 'var(--accent)' }}>
-          General guide
-        </h2>
-        <div className="space-y-5 mb-12">
-          {GENERAL_STEPS.map((s) => (
-            <div key={s.title}>
-              <p className="text-sm font-semibold mb-1" style={{ color: 'var(--ink)' }}>{s.title}</p>
-              <p className="text-sm leading-relaxed" style={{ color: 'var(--muted)' }}>{s.body}</p>
-            </div>
-          ))}
-        </div>
-
-        {dashboardSteps.length > 0 && (
-          <>
-            <h2 className="text-sm font-semibold uppercase tracking-wide mb-4" style={{ color: 'var(--accent)' }}>
-              This project&apos;s dashboard steps
-            </h2>
-            <div className="space-y-6">
-              {dashboardSteps.map((s) => (
-                <div key={s.step_number} className="rounded-2xl p-5 border" style={{ background: 'var(--white)', borderColor: 'var(--border)' }}>
-                  <p className="text-sm font-semibold mb-2" style={{ color: 'var(--ink)' }}>
-                    Step {s.step_number}: {s.title}
-                  </p>
-                  <p className="text-sm leading-relaxed whitespace-pre-line" style={{ color: 'var(--ink)' }}>
+        {dashboardSteps.length > 0 ? (
+          <div className="space-y-6">
+            {dashboardSteps.map((s) => (
+              <div key={s.step_number} className="rounded-2xl p-5 border" style={{ background: 'var(--white)', borderColor: 'var(--border)' }}>
+                <p className="text-sm font-semibold mb-2" style={{ color: 'var(--ink)' }}>
+                  Step {s.step_number}: {s.title}
+                </p>
+                {s.explanation && (
+                  <p className="text-sm leading-relaxed whitespace-pre-line mb-3" style={{ color: 'var(--ink)' }}>
                     {s.explanation}
                   </p>
-                </div>
-              ))}
-            </div>
-          </>
+                )}
+                {s.beginner_breakdown && (
+                  <div>
+                    <p className="text-xs font-semibold uppercase tracking-wide mb-1" style={{ color: 'var(--muted)' }}>
+                      Click by click
+                    </p>
+                    <p className="text-sm leading-relaxed whitespace-pre-line" style={{ color: 'var(--muted)' }}>
+                      {s.beginner_breakdown}
+                    </p>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        ) : (
+          <p className="text-sm" style={{ color: 'var(--muted)' }}>
+            This project doesn&apos;t have any dashboard-building steps.
+          </p>
         )}
       </div>
     </div>
