@@ -30,14 +30,25 @@ export async function middleware(request: NextRequest) {
 
   const { data: { user } } = await supabase.auth.getUser()
 
+   // Protect /dashboard and any nested routes under it
   if (!user && request.nextUrl.pathname.startsWith('/dashboard')) {
     const redirectUrl = new URL('/login', request.url)
     return NextResponse.redirect(redirectUrl)
+  }
+
+  // Show only the coming-soon page on the public custom domain
+  const hostname = request.headers.get('host') || ''
+  const isCustomDomain = hostname.includes('bornout.co.in')
+  const isComingSoonPath = request.nextUrl.pathname === '/coming-soon'
+  const isInternalPath = request.nextUrl.pathname.startsWith('/_next') || request.nextUrl.pathname.startsWith('/api')
+
+  if (isCustomDomain && !isComingSoonPath && !isInternalPath) {
+    return NextResponse.redirect(new URL('/coming-soon', request.url))
   }
 
   return response
 }
 
 export const config = {
-  matcher: ['/dashboard/:path*'],
+  matcher: ['/dashboard/:path*', '/((?!_next|api).*)'],
 }
