@@ -39,7 +39,10 @@ const TOPIC_CATEGORIES = {
 export default function LearnPage() {
   return (
     <div className="min-h-screen" style={{ background: 'var(--paper)' }}>
-      <div className="max-w-3xl mx-auto px-6 py-16">
+            <div className="max-w-3xl mx-auto px-6 py-16">
+        <a href="/settings" className="inline-flex items-center gap-1 text-xs font-medium mb-6" style={{ color: 'var(--muted)' }}>
+          ← Settings
+        </a>
         <h1
           className="text-2xl font-bold mb-2"
           style={{ color: 'var(--ink)', fontFamily: 'var(--font-space-grotesk)' }}

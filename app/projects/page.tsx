@@ -43,7 +43,10 @@ export default async function ProjectsPage() {
     <div className="min-h-screen" style={{ background: 'var(--paper)' }}>
       <Navbar creditBalance={profile?.credit_balance ?? 0} userName={profile?.name ?? ''} />
 
-      <div className="max-w-4xl mx-auto px-6 py-14">
+            <div className="max-w-4xl mx-auto px-6 py-14">
+        <a href="/dashboard" className="inline-flex items-center gap-1 text-xs font-medium mb-6" style={{ color: 'var(--muted)' }}>
+          ← Dashboard
+        </a>
         <div className="flex items-center justify-between mb-8">
           <h1 className="text-2xl font-bold" style={{ color: 'var(--ink)' }}>
             My Projects

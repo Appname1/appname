@@ -103,7 +103,10 @@ export default function SuggestionsPage() {
 
   return (
     <div className="min-h-screen" style={{ background: 'var(--paper)' }}>
-      <div className="max-w-5xl mx-auto px-6 py-16">
+            <div className="max-w-5xl mx-auto px-6 py-16">
+        <a href="/entry" className="inline-flex items-center gap-1 text-xs font-medium mb-6" style={{ color: 'var(--muted)' }}>
+          ← Back
+        </a>
         <h1
           className="text-2xl font-bold mb-2"
           style={{ color: 'var(--ink)', fontFamily: 'var(--font-space-grotesk)' }}

@@ -3,7 +3,10 @@ import Link from 'next/link'
 export default function EntryPage() {
   return (
     <div className="min-h-screen" style={{ background: 'var(--paper)' }}>
-      <div className="max-w-5xl mx-auto px-6 py-16">
+            <div className="max-w-5xl mx-auto px-6 py-16">
+        <a href="/dashboard" className="inline-flex items-center gap-1 text-xs font-medium mb-6" style={{ color: 'var(--muted)' }}>
+          ← Dashboard
+        </a>
         <h1
           className="text-3xl font-bold mb-2"
           style={{ color: 'var(--ink)', fontFamily: 'var(--font-space-grotesk)' }}

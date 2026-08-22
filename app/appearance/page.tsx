@@ -8,7 +8,10 @@ export default function AppearancePage() {
 
   return (
     <div className="min-h-screen" style={{ background: 'var(--paper)' }}>
-      <div className="max-w-4xl mx-auto px-6 py-10">
+            <div className="max-w-4xl mx-auto px-6 py-10">
+        <a href="/settings" className="inline-flex items-center gap-1 text-xs font-medium mb-6" style={{ color: 'var(--muted)' }}>
+          ← Settings
+        </a>
         <h1 className="text-2xl font-bold mb-1" style={{ color: 'var(--ink)' }}>
           Appearance
         </h1>

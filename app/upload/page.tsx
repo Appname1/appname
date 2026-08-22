@@ -180,7 +180,10 @@ export default function UploadPage() {
 
   return (
     <div className="min-h-screen" style={{ background: 'var(--paper)' }}>
-      <div className="max-w-3xl mx-auto px-6 py-16">
+            <div className="max-w-3xl mx-auto px-6 py-16">
+        <a href="/suggestions" className="inline-flex items-center gap-1 text-xs font-medium mb-6" style={{ color: 'var(--muted)' }}>
+          ← Back
+        </a>
         <div
           className="rounded-2xl p-6 border mb-8"
           style={{ background: 'var(--white)', borderColor: 'var(--border)' }}
