@@ -26,7 +26,7 @@ export default function LandingPage() {
         <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
           <Logo size={28} showWordmark />
           <Link
-            href="/login"
+            href="/coming-soon"
             className="text-sm font-medium rounded-lg px-4 py-2"
             style={{ background: 'var(--ink)', color: 'var(--paper)' }}
           >
@@ -59,7 +59,7 @@ export default function LandingPage() {
               real: working code, plain English explanations, and interview prep built in.
             </p>
             <Link
-              href="/login"
+              href="/coming-soon"
               className="w-fit text-sm font-medium rounded-lg px-6 py-3"
               style={{ background: 'var(--ink)', color: 'var(--paper)' }}
             >
