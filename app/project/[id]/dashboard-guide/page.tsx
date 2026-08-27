@@ -69,9 +69,14 @@ export default function DashboardGuidePage() {
           <div className="space-y-6">
             {dashboardSteps.map((s) => (
               <div key={s.step_number} className="rounded-2xl p-5 border" style={{ background: 'var(--white)', borderColor: 'var(--border)' }}>
-                <p className="text-sm font-semibold mb-2" style={{ color: 'var(--ink)' }}>
-                  Step {s.step_number}: {s.title}
-                </p>
+                                <div className="flex items-center gap-2 mb-2">
+                  <span className="text-xs font-semibold rounded-full px-2 py-0.5" style={{ background: 'var(--accent-bg)', color: 'var(--accent-dark)' }}>
+                    Step {s.step_number}
+                  </span>
+                  <p className="text-sm font-semibold" style={{ color: 'var(--ink)' }}>
+                    {s.title}
+                  </p>
+                </div>
                 {s.explanation && (
                   <p className="text-sm leading-relaxed whitespace-pre-line mb-3" style={{ color: 'var(--ink)' }}>
                     {s.explanation}
