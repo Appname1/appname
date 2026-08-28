@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import WaitlistForm from '@/components/WaitlistForm'
+import Reveal from '@/components/Reveal'
 import Logo from '@/components/Logo'
 
 const DOMAINS = ['Data Analyst', 'Data Scientist', 'ML Engineer', 'AI Engineer', 'NLP', 'GenAI', 'RAG']
@@ -101,6 +102,7 @@ export default function LandingPage() {
       </section>
 
       {/* How it works */}
+      <Reveal>
       <section className="max-w-4xl mx-auto px-6 py-16">
         <h2
           className="text-2xl font-bold mb-10"
@@ -135,8 +137,10 @@ export default function LandingPage() {
           </div>
         </div>
       </section>
+      </Reveal>
 
       {/* Domain pills */}
+      <Reveal>
       <section className="max-w-6xl mx-auto px-6 py-10">
         <div className="flex flex-wrap gap-2.5 justify-center">
           {DOMAINS.map((d) => (
@@ -150,8 +154,10 @@ export default function LandingPage() {
           ))}
         </div>
       </section>
+      </Reveal>
 
       {/* What you get */}
+      <Reveal>
       <section className="max-w-3xl mx-auto px-6 py-16">
         <h2
           className="text-2xl font-bold mb-5"
@@ -180,8 +186,10 @@ export default function LandingPage() {
           ))}
         </div>
       </section>
+      </Reveal>
 
       {/* Credit packs */}
+      <Reveal>
       <section className="max-w-6xl mx-auto px-6 py-16">
         <h2
           className="text-2xl font-bold mb-2 text-center"
@@ -216,8 +224,10 @@ export default function LandingPage() {
           ))}
         </div>
       </section>
+      </Reveal>
 
       {/* Waitlist */}
+      <Reveal>
       <section className="max-w-lg mx-auto px-6 py-16">
         <h2
           className="text-2xl font-bold mb-2 text-center"
@@ -230,6 +240,7 @@ export default function LandingPage() {
         </p>
         <WaitlistForm />
       </section>
+      </Reveal>
 
       {/* Footer */}
       <footer className="border-t py-10" style={{ borderColor: 'var(--border)' }}>
