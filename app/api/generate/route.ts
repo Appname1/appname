@@ -45,6 +45,7 @@ Exact JSON structure:
       "beginner_breakdown": "",
       "expected_output": "",
       "explanation": "",
+      "dashboard_preview": [],
       "topics_used": [],
       "variable_suggestions": "",
       "quiz": {
@@ -71,15 +72,19 @@ DA DOMAIN STEP ALLOCATION RULE: if domain is "DA", the project MUST cover every 
 3. If "Power BI" or "Tableau" was selected: include 2-3 dedicated steps for dashboard-building. For these steps, set "code" to an empty string.
 
 "explanation" must be a NUMBERED list of concrete clicks/actions using the ACTUAL column names from this project's dataset, specific enough to follow without needing a screenshot. Never write a single vague sentence like "we build a dashboard." Every numbered action must be literal and complete — do not abbreviate or cut off partway. Example format (adapt column names to the real dataset):
+Example format for the FIRST BI step only (adapt column names to the real dataset):
 "1. Open Power BI Desktop.
 2. Click Get Data > Text/CSV, select your file, click Load.
 3. Go to Report view. Insert a new Clustered Column Chart.
 4. Drag [actual column name] to the X-axis.
 5. Drag [actual column name] to the Y-axis, set aggregation to Sum.
-6. Insert a Card visual. Drag [actual column name] onto it, set aggregation to Average, to show the KPI at a glance.
-7. If a calculated field is needed, go to Modeling > New Measure and enter this exact DAX formula: [Measure Name] = SUM('Table'[ColumnName]) — adjust the formula to whatever calculation this step actually needs (e.g. AVERAGE, COUNTROWS, DIVIDE for a ratio, CALCULATE with a FILTER for a conditional total).
-8. Save the file."
+6. Save the file."
 
+CRITICAL: only the FIRST BI-building step may include opening the tool, importing data, or loading data. Every subsequent BI step must assume the tool is already open with data loaded, and jump straight into that step's specific new work (a different chart type, a new measure, filters, or the final dashboard layout). Do NOT repeat "open Power BI Desktop / Get Data / Load the data" in more than one step — that is a hard rule. Each BI step must produce something visibly different from the others (different chart type, different columns, a KPI card, a slicer, or the final combined layout) — never near-duplicate steps with only the column name swapped.
+
+VISUAL PREVIEW: for every BI-building step, populate "dashboard_preview" — an array describing what the canvas should look like after this step, so a learner can compare their screen to a reference. Each item: {"type": "bar_chart"|"line_chart"|"card"|"pie_chart"|"table"|"slicer", "title": "short label for this tile, e.g. 'Loan Purpose by Volume'", "position": "top-left"|"top-right"|"bottom-left"|"bottom-right"|"full-width"}. Include ONLY the visuals that exist on the canvas as of this step (cumulative — step 3's preview should include everything from steps 1-2 plus what's new). Non-BI steps (Python code steps) should have "dashboard_preview": [].
+
+FORMATTING AND COLOR GUIDANCE: for BI steps, beginner_breakdown must also include at least one concrete formatting tip relevant to that step — e.g. "To change the bar color: click the chart, open the Format pane (paint roller icon), expand 'Columns', click the color swatch next to 'Fill', pick a color that matches the rest of your dashboard." or "To add data labels: Format pane > Data labels > toggle On." Always name the exact menu/pane/icon, never say "format it nicely" without the click path.
 Any step requiring a calculated/derived value (a rate, an average, a ratio, a running total) MUST include the literal DAX formula written out in full, not just "add a calculated field." If Tableau was selected instead, use Tableau's equivalent (calculated fields with its formula syntax, e.g. SUM([ColumnName]) or AVG([ColumnName])) instead of DAX.
 
 "beginner_breakdown" must restate the FULL sequence (not a subset) in even more basic terms for someone who has never opened the tool before, explaining what each button/menu actually does, still using the → arrow format for anything unfamiliar (e.g. "Get Data → the button that lets you import a file into Power BI"). Do not truncate — cover every numbered action from explanation.

@@ -4,12 +4,36 @@ import { useEffect, useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase'
 
+interface PreviewTile {
+  type: string
+  title: string
+  position: string
+}
+
 interface StepData {
   step_number: number
   title: string
   code: string
   explanation: string
   beginner_breakdown: string
+  dashboard_preview?: PreviewTile[]
+}
+
+const TYPE_ICONS: Record<string, string> = {
+  bar_chart: '▮▮▮',
+  line_chart: '📈',
+  card: '#',
+  pie_chart: '◔',
+  table: '☰',
+  slicer: '▾',
+}
+
+const POSITION_GRID: Record<string, string> = {
+  'top-left': 'col-start-1 row-start-1',
+  'top-right': 'col-start-2 row-start-1',
+  'bottom-left': 'col-start-1 row-start-2',
+  'bottom-right': 'col-start-2 row-start-2',
+  'full-width': 'col-span-2',
 }
 
 interface ProjectJson {
@@ -81,6 +105,27 @@ export default function DashboardGuidePage() {
                   <p className="text-sm leading-relaxed whitespace-pre-line mb-3" style={{ color: 'var(--ink)' }}>
                     {s.explanation}
                   </p>
+                )}
+                                 {s.dashboard_preview && s.dashboard_preview.length > 0 && (
+                  <div className="mb-4">
+                    <p className="text-xs font-semibold uppercase tracking-wide mb-2" style={{ color: 'var(--muted)' }}>
+                      What your canvas should look like
+                    </p>
+                    <div className="grid grid-cols-2 gap-2 p-3 rounded-lg" style={{ background: 'var(--tag-bg)' }}>
+                      {s.dashboard_preview.map((tile, i) => (
+                        <div
+                          key={i}
+                          className={`rounded-md p-3 border text-center ${POSITION_GRID[tile.position] ?? ''}`}
+                          style={{ background: 'var(--white)', borderColor: 'var(--border)' }}
+                        >
+                          <p className="text-lg mb-1" style={{ color: 'var(--accent)' }}>
+                            {TYPE_ICONS[tile.type] ?? '▢'}
+                          </p>
+                          <p className="text-xs" style={{ color: 'var(--ink)' }}>{tile.title}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
                 )}
                 {s.beginner_breakdown && (
                   <div>

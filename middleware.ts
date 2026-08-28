@@ -36,17 +36,6 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(redirectUrl)
   }
 
-    // On the public custom domain, show the real landing page at "/",
-  // but redirect any deeper page (login, dashboard, entry, etc.) to coming-soon
-  const hostname = request.headers.get('host') || ''
-  const isCustomDomain = hostname.includes('bornout.co.in')
-  const isRootPath = request.nextUrl.pathname === '/'
-  const isComingSoonPath = request.nextUrl.pathname === '/coming-soon'
-  const isInternalPath = request.nextUrl.pathname.startsWith('/_next') || request.nextUrl.pathname.startsWith('/api')
-
-  if (isCustomDomain && !isRootPath && !isComingSoonPath && !isInternalPath) {
-    return NextResponse.redirect(new URL('/coming-soon', request.url))
-  }
 
   return response
 }

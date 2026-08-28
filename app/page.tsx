@@ -236,7 +236,7 @@ export default function LandingPage() {
         <div className="max-w-6xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-4">
           <Logo size={20} showWordmark />
           <div className="flex gap-6 text-sm" style={{ color: 'var(--muted)' }}>
-            <a href="mailto:hello@appname.com">hello@appname.com</a>
+            <a href="mailto:bornout.co@gmail.com">bornout.co@gmail.com</a>
             <Link href="/privacy">Privacy</Link>
             <Link href="/terms">Terms</Link>
           </div>
