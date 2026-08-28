@@ -68,10 +68,10 @@ export default function LandingPage() {
             </Link>
           </div>
 
-          <div className="flex flex-col gap-5">
+           <div className="flex flex-col gap-5">
             <div
-              className="rounded-2xl p-6 flex-1 flex flex-col justify-center"
-              style={{ background: 'var(--accent-bg)', border: '1px solid var(--border)' }}
+              className="rounded-2xl p-6 flex-1 flex flex-col justify-center animate-pop-in"
+              style={{ background: 'var(--accent-bg)', border: '1px solid var(--border)', animationDelay: '0.1s' }}
             >
               <p className="text-xs font-medium mb-1" style={{ color: 'var(--accent-dark)' }}>
                 You start with
@@ -84,8 +84,8 @@ export default function LandingPage() {
               </p>
             </div>
             <div
-              className="rounded-2xl p-6 flex-1 flex flex-col justify-center"
-              style={{ background: 'var(--green-bg)', border: '1px solid var(--border)' }}
+              className="rounded-2xl p-6 flex-1 flex flex-col justify-center animate-pop-in"
+              style={{ background: 'var(--green-bg)', border: '1px solid var(--border)', animationDelay: '0.25s' }}
             >
               <p className="text-xs font-medium mb-1" style={{ color: 'var(--green-dark)' }}>
                 Every project includes

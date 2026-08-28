@@ -45,3 +45,23 @@ body {
 .animate-slide-in {
   animation: slideIn 0.35s ease-out;
 }
+
+@keyframes popIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.9) translateY(8px);
+  }
+  60% {
+    opacity: 1;
+    transform: scale(1.03) translateY(0);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.animate-pop-in {
+  opacity: 0;
+  animation: popIn 0.5s ease-out forwards;
+}
