@@ -37,16 +37,23 @@ export default async function DashboardPage() {
       .order('step_number', { ascending: false })
       .limit(1)
 
-    if (completedSteps && completedSteps.length > 0) {
+        if (completedSteps && completedSteps.length > 0) {
       continueStep = completedSteps[0].step_number + 1
     }
   }
+
+  const activeTotalSteps: number = activeProject?.project_json?.steps?.length ?? 0
+  const activeIsFinished = activeTotalSteps > 0 && continueStep > activeTotalSteps
 
   const totalStepsForActive: number = activeProject?.project_json?.steps?.length ?? 0
   const stepList = totalStepsForActive > 0
     ? Array.from({ length: totalStepsForActive }, (_, i) => i + 1)
     : []
-  const continueHref = activeProject ? `/project/${activeProject.id}/step/${continueStep}` : '/entry'
+    const continueHref = activeProject
+    ? activeIsFinished
+      ? `/project/${activeProject.id}/complete`
+      : `/project/${activeProject.id}/step/${continueStep}`
+    : '/entry'
 
   // Ring math: circumference for r=21 is ~132
   const CIRC = 132
@@ -88,9 +95,14 @@ export default async function DashboardPage() {
             <p className="text-base font-semibold truncate" style={{ color: 'var(--ink)' }}>
               {activeProject ? (activeProject.project_json?.project_title || 'Untitled project') : "Pick one when you're ready"}
             </p>
-            <p className="text-xs" style={{ color: 'var(--muted)' }}>
-              {activeProject ? `${activeProject.domain} · continuing at step ${continueStep}` : 'No pressure — browse a role or paste a JD'}
-            </p>
+         <div className="flex items-center justify-between mb-8">
+          <p style={{ color: 'var(--muted)' }}>
+            {activeProject ? 'Pick up where you left off.' : "Let's build something you can show off."}
+          </p>
+          <a href="/entry" className="text-sm font-medium rounded-lg px-4 py-2 shrink-0" style={{ background: 'var(--ink)', color: 'var(--paper)' }}>
+            + Start new project
+          </a>
+        </div>
           </div>
           <a href={continueHref} className="text-sm font-medium rounded-lg px-4 py-2 shrink-0" style={{ background: 'var(--ink)', color: 'var(--paper)' }}>
             {activeProject ? 'Continue' : 'Start'}
