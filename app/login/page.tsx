@@ -1,37 +1,20 @@
 'use client'
 
-import { createClient } from '@/lib/supabase'
-import Logo from '@/components/Logo'
+import { signInWithGoogle } from '@/lib/auth'
 
 export default function LoginPage() {
-  const handleGoogleLogin = async () => {
-    const supabase = createClient()
-    const { error } = await supabase.auth.signInWithOAuth({
-      provider: 'google',
-      options: {
-        redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/auth/callback`,
-      },
-    })
-    if (error) {
-      console.error('Login error:', error.message)
-    }
-  }
-
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#FAF9F6]">
       <div className="max-w-sm w-full mx-auto px-8 py-12 text-center">
-        <div className="flex justify-center mb-4">
-          <Logo size={44} />
-        </div>
         <h1 className="text-3xl font-bold text-[#141312] mb-2">
-          bornout
+          Appname
         </h1>
         <p className="text-[#6B6A66] mb-10">
           Build real projects. Land the job.
         </p>
 
         <button
-          onClick={handleGoogleLogin}
+          onClick={signInWithGoogle}
           className="w-full flex items-center justify-center gap-3 border border-[#E4E2DA] rounded-lg py-3 px-6 bg-white hover:bg-[#FAF9F6] transition-colors text-[#141312] font-medium"
         >
           <svg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
