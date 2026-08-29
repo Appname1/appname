@@ -27,7 +27,7 @@ export default function LandingPage() {
         <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
           <Logo size={28} showWordmark />
           <Link
-            href="/coming-soon"
+            href="/login"
             className="text-sm font-medium rounded-lg px-4 py-2"
             style={{ background: 'var(--ink)', color: 'var(--paper)' }}
           >
