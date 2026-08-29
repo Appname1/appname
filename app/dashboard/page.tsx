@@ -77,9 +77,14 @@ export default async function DashboardPage() {
         <h1 className="text-2xl font-bold mb-1" style={{ color: 'var(--ink)' }}>
           Hi {displayName},
         </h1>
-        <p className="mb-9" style={{ color: 'var(--muted)' }}>
-          Let&apos;s build something you can show off.
-        </p>
+        <div className="flex items-center justify-between mb-9">
+          <p style={{ color: 'var(--muted)' }}>
+            {activeProject ? 'Pick up where you left off.' : "Let's build something you can show off."}
+          </p>
+          <a href="/entry" className="text-sm font-medium rounded-lg px-4 py-2 shrink-0" style={{ background: 'var(--ink)', color: 'var(--paper)' }}>
+            + Start new project
+          </a>
+        </div>
 
         {/* Today's project / active project — wayfinding route icon */}
         <div className="rounded-2xl p-6 border mb-8 flex items-center gap-4" style={cardStyle}>
@@ -95,14 +100,6 @@ export default async function DashboardPage() {
             <p className="text-base font-semibold truncate" style={{ color: 'var(--ink)' }}>
               {activeProject ? (activeProject.project_json?.project_title || 'Untitled project') : "Pick one when you're ready"}
             </p>
-         <div className="flex items-center justify-between mb-8">
-          <p style={{ color: 'var(--muted)' }}>
-            {activeProject ? 'Pick up where you left off.' : "Let's build something you can show off."}
-          </p>
-          <a href="/entry" className="text-sm font-medium rounded-lg px-4 py-2 shrink-0" style={{ background: 'var(--ink)', color: 'var(--paper)' }}>
-            + Start new project
-          </a>
-        </div>
           </div>
           <a href={continueHref} className="text-sm font-medium rounded-lg px-4 py-2 shrink-0" style={{ background: 'var(--ink)', color: 'var(--paper)' }}>
             {activeProject ? 'Continue' : 'Start'}
