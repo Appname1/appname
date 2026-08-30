@@ -127,7 +127,7 @@ Return ONLY raw JSON, nothing before { and nothing after }.`
 
 async function callGroq(systemPrompt: string, userMessage: string) {
   const completion = await groq.chat.completions.create({
-    model: 'llama-3.3-70b-versatile',
+    model: 'openai/gpt-oss-120b',
     messages: [
       { role: 'system', content: systemPrompt },
       { role: 'user', content: userMessage },

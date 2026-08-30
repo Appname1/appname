@@ -45,7 +45,7 @@ export async function POST(request: Request) {
     const userMessage = `Project: ${project_title}\nDomain: ${domain}\nColumns: ${columns.join(', ')}\nSample rows: ${JSON.stringify(sample_rows ?? [])}`
 
     const completion = await groq.chat.completions.create({
-      model: 'llama-3.3-70b-versatile',
+      model: 'openai/gpt-oss-120b',
       messages: [
         { role: 'system', content: SYSTEM_PROMPT },
         { role: 'user', content: userMessage },
