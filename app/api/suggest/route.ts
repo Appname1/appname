@@ -115,11 +115,13 @@ export async function POST(request: Request) {
     try {
       parsed = JSON.parse(raw)
     } catch {
+      console.error('[/api/suggest] JSON.parse failed. Raw Groq output:', raw)
       return NextResponse.json({ error: 'suggestion_failed', retry: true }, { status: 500 })
     }
 
     return NextResponse.json(parsed)
-  } catch {
+  } catch (err) {
+    console.error('[/api/suggest] Unhandled error:', err)
     return NextResponse.json({ error: 'suggestion_failed', retry: true }, { status: 500 })
   }
 }
