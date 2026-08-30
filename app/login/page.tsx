@@ -7,7 +7,7 @@ export default function LoginPage() {
     <div className="min-h-screen flex items-center justify-center bg-[#FAF9F6]">
       <div className="max-w-sm w-full mx-auto px-8 py-12 text-center">
         <h1 className="text-3xl font-bold text-[#141312] mb-2">
-          Appname
+          bornout
         </h1>
         <p className="text-[#6B6A66] mb-10">
           Build real projects. Land the job.
