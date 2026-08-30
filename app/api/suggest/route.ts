@@ -99,14 +99,27 @@ export async function POST(request: Request) {
 
     const userMessage = 'Job description: ' + jd + '\n\nSelected skills: ' + skills.join(', ')
 
-    const completion = await groq.chat.completions.create({
-      model: 'openai/gpt-oss-120b',
-      messages: [
-        { role: 'system', content: SYSTEM_PROMPT },
-        { role: 'user', content: userMessage },
-      ],
-      max_tokens: 2000,
-    })
+    let completion
+    try {
+      completion = await groq.chat.completions.create({
+        model: 'openai/gpt-oss-120b',
+        messages: [
+          { role: 'system', content: SYSTEM_PROMPT },
+          { role: 'user', content: userMessage },
+        ],
+        max_tokens: 2000,
+      })
+    } catch (groqErr) {
+      console.error('[/api/suggest] Groq call failed:', groqErr)
+      const status = (groqErr as { status?: number })?.status
+      if (status === 429) {
+        return NextResponse.json(
+          { error: 'rate_limited', message: 'Our AI provider is at capacity right now. Please try again in a minute.' },
+          { status: 429 }
+        )
+      }
+      return NextResponse.json({ error: 'suggestion_failed', retry: true }, { status: 500 })
+    }
 
     let raw = completion.choices[0]?.message?.content ?? ''
     raw = raw.replace(/```json\s*/g, '').replace(/```\s*/g, '').trim()

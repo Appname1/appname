@@ -207,14 +207,34 @@ is_case_study: ${is_case_study}`
       if (!Array.isArray(parsed.steps) || parsed.steps.length < 4) {
         throw new Error('invalid_steps')
       }
-    } catch {
+    } catch (firstErr) {
+      console.error('[/api/generate] First Groq call failed:', firstErr)
+
+      const status = (firstErr as { status?: number })?.status
+      if (status === 429) {
+        return NextResponse.json(
+          { error: 'rate_limited', message: 'Our AI provider is at capacity right now. Please try again in a minute.' },
+          { status: 429 }
+        )
+      }
+
       // Retry once with the same prompt
       try {
         parsed = await callGroq(systemPrompt, userMessage)
         if (!Array.isArray(parsed.steps) || parsed.steps.length < 4) {
           throw new Error('invalid_steps')
         }
-      } catch {
+      } catch (secondErr) {
+        console.error('[/api/generate] Retry also failed:', secondErr)
+
+        const retryStatus = (secondErr as { status?: number })?.status
+        if (retryStatus === 429) {
+          return NextResponse.json(
+            { error: 'rate_limited', message: 'Our AI provider is at capacity right now. Please try again in a minute.' },
+            { status: 429 }
+          )
+        }
+
         return NextResponse.json({ error: 'generation_failed', retry: true }, { status: 500 })
       }
     }
@@ -236,7 +256,8 @@ is_case_study: ${is_case_study}`
     }
 
     return NextResponse.json({ project_id: inserted.id, status: 'ready' })
-  } catch {
+  } catch (err) {
+    console.error('[/api/generate] Unhandled error:', err)
     return NextResponse.json({ error: 'generation_failed', retry: true }, { status: 500 })
   }
 }
