@@ -373,7 +373,7 @@ export default function StepPage() {
                 className="text-sm font-semibold rounded-lg px-4 py-2.5 flex items-center gap-2"
                 style={{ background: 'var(--accent)', color: 'var(--white)' }}
               >
-                <Logo size={16} />
+                <Logo size={16} color="var(--white)" />
                 {breakdownOpen ? 'Hide breakdown' : 'Confused? Break it down'}
               </button>
               {breakdownOpen && (
