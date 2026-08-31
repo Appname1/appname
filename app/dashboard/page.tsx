@@ -74,7 +74,7 @@ export default async function DashboardPage() {
               {activeProject ? 'Pick up where you left off.' : "Let's build something you can show off."}
             </p>
             <a href="/entry" className="text-sm font-medium rounded-lg px-4 py-2 shrink-0" style={{ background: 'var(--ink)', color: 'var(--paper)' }}>
-              + Start new project
+              Start new project
             </a>
           </div>
         </div>
@@ -137,13 +137,10 @@ export default async function DashboardPage() {
         {/* Stats row */}
         <div className="dash-in dash-in-3 grid grid-cols-2 gap-4 mb-8">
           <div className="rounded-2xl p-5 border text-center transition-shadow hover:shadow-md" style={cardStyle}>
-            <p className="text-2xl font-bold leading-none" style={{ color: 'var(--ink)', fontFamily: 'var(--font-space-grotesk)' }}>
-              {profile?.credit_balance ?? 0}
+            <p className="text-lg font-bold leading-none" style={{ color: 'var(--muted)', fontFamily: 'var(--font-space-grotesk)' }}>
+              Coming soon
             </p>
             <p className="text-xs mt-1.5" style={{ color: 'var(--muted)' }}>Credits</p>
-            <a href="/credits/topup" className="text-xs font-medium" style={{ color: 'var(--accent)' }}>
-              Top up →
-            </a>
           </div>
           <div className="rounded-2xl p-5 border text-center transition-shadow hover:shadow-md" style={cardStyle}>
             <p className="text-2xl font-bold leading-none" style={{ color: 'var(--ink)', fontFamily: 'var(--font-space-grotesk)' }}>
@@ -154,9 +151,21 @@ export default async function DashboardPage() {
         </div>
 
         {/* Quick links */}
-        <div className="dash-in dash-in-4 flex gap-6 mb-10 text-sm">
-          <a href="/projects" style={{ color: 'var(--accent)' }}>My Projects →</a>
-          <a href="/portfolio" style={{ color: 'var(--accent)' }}>Portfolio →</a>
+        <div className="dash-in dash-in-4 flex gap-3 mb-10">
+          <a
+            href="/projects"
+            className="text-sm font-medium rounded-lg px-4 py-2 border transition-colors"
+            style={{ borderColor: 'var(--border)', color: 'var(--ink)', background: 'var(--white)' }}
+          >
+            My Projects →
+          </a>
+          <a
+            href="/portfolio"
+            className="text-sm font-medium rounded-lg px-4 py-2 border transition-colors"
+            style={{ borderColor: 'var(--border)', color: 'var(--ink)', background: 'var(--white)' }}
+          >
+            Portfolio →
+          </a>
         </div>
 
         {projects && projects.length > 1 && (
