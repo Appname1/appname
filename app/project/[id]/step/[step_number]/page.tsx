@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase'
-import Logo from '@/components/Logo'
+
 
 interface QuizData {
   question: string
@@ -93,7 +93,7 @@ export default function StepPage() {
   const [quizAnswer, setQuizAnswer] = useState<string | null>(null)
   const [quizRevealed, setQuizRevealed] = useState(false)
   const [notes, setNotes] = useState('')
-
+  const [copied, setCopied] = useState(false)
   const codeRef = useRef<HTMLElement>(null)
   const breakdownRef = useRef<HTMLElement>(null)
 
@@ -195,6 +195,11 @@ export default function StepPage() {
     localStorage.setItem(`bornout-notes-${projectId}-${stepNumber}`, value)
   }
 
+  const handleCopyCode = (code: string) => {
+    navigator.clipboard.writeText(code)
+    setCopied(true)
+    setTimeout(() => setCopied(false), 1500)
+  }
   const handleNextStep = async () => {
     setAdvancing(true)
     setAdvanceError('')
@@ -338,11 +343,21 @@ export default function StepPage() {
               )}
               <div className="flex items-center gap-3 mt-2 flex-wrap">
                 <button
-                  onClick={() => navigator.clipboard.writeText(step.code)}
-                  className="text-xs font-medium rounded-md px-3 py-1.5 border"
+                  onClick={() => handleCopyCode(step.code)}
+                  title="Copy code"
+                  className="rounded-md p-1.5 border flex items-center justify-center"
                   style={{ borderColor: 'var(--border)', color: 'var(--ink)', background: 'var(--white)' }}
                 >
-                  Copy code
+                  {copied ? (
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--green)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                      <polyline points="20 6 9 17 4 12" />
+                    </svg>
+                  ) : (
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+                      <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+                    </svg>
+                  )}
                 </button>
                 <a href="https://colab.research.google.com/" target="_blank" rel="noopener noreferrer" className="text-xs font-medium rounded-md px-3 py-1.5" style={{ background: 'var(--accent-bg)', color: 'var(--accent-dark)' }}>
                   Open Google Colab (try it yourself) →
@@ -373,7 +388,6 @@ export default function StepPage() {
                 className="text-sm font-semibold rounded-lg px-4 py-2.5 flex items-center gap-2"
                 style={{ background: 'var(--accent)', color: 'var(--white)' }}
               >
-                <Logo size={16} color="var(--white)" />
                 {breakdownOpen ? 'Hide breakdown' : 'Confused? Break it down'}
               </button>
               {breakdownOpen && (
