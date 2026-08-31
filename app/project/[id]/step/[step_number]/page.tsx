@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase'
+import Logo from '@/components/Logo'
 
 interface QuizData {
   question: string
@@ -57,6 +58,7 @@ export default function StepPage() {
   const [advancing, setAdvancing] = useState(false)
   const [advanceError, setAdvanceError] = useState('')
   const [quizAnswer, setQuizAnswer] = useState<string | null>(null)
+  const [quizRevealed, setQuizRevealed] = useState(false)
 
   const codeRef = useRef<HTMLElement>(null)
   const breakdownRef = useRef<HTMLElement>(null)
@@ -297,7 +299,7 @@ export default function StepPage() {
                 const colabStyle = { background: 'var(--accent-bg)', color: 'var(--accent-dark)' }
                 return (
                   <a href="https://colab.research.google.com/" target="_blank" rel="noopener noreferrer" className="text-xs font-medium rounded-md px-3 py-1.5" style={colabStyle}>
-                    Open Google Colab — try it yourself →
+                    Open Google Colab  (try it yourself) →
                   </a>
                 )
               })()}
@@ -333,9 +335,10 @@ export default function StepPage() {
           <div className="mb-4">
             <button
               onClick={() => setBreakdownOpen(!breakdownOpen)}
-              className="text-sm font-medium rounded-lg px-4 py-2 border"
-              style={{ borderColor: 'var(--border)', color: 'var(--ink)', background: 'var(--white)' }}
+              className="text-sm font-semibold rounded-lg px-4 py-2.5 flex items-center gap-2"
+              style={{ background: 'var(--accent)', color: 'var(--white)' }}
             >
+              <Logo size={16} />
               {breakdownOpen ? 'Hide breakdown' : 'Confused? Break it down'}
             </button>
             {breakdownOpen && (
@@ -513,10 +516,20 @@ export default function StepPage() {
           </div>
         )}
 
-        {hasQuiz && (
+        {hasQuiz && !quizRevealed && (
+          <button
+            onClick={() => setQuizRevealed(true)}
+            className="w-full text-sm font-semibold rounded-xl p-4 mb-6 border-2 border-dashed"
+            style={{ borderColor: 'var(--accent)', color: 'var(--accent)', background: 'var(--white)' }}
+          >
+            Done with this step? Take the quick check →
+          </button>
+        )}
+
+        {hasQuiz && quizRevealed && (
           <div
             className="rounded-xl p-6 border mb-6"
-            style={{ background: 'var(--white)', borderColor: 'var(--border)' }}
+            style={{ background: 'var(--white)', borderColor: 'var(--accent)' }}
           >
             <h3 className="text-sm font-semibold mb-4" style={{ color: 'var(--ink)' }}>
               {step.quiz.question}
@@ -531,14 +544,17 @@ export default function StepPage() {
                     key={opt}
                     onClick={() => !quizAnswer && setQuizAnswer(letter)}
                     disabled={!!quizAnswer}
-                    className="w-full text-left text-sm rounded-lg px-4 py-3 border transition-colors"
+                    className="w-full text-left text-sm rounded-lg px-4 py-3 border transition-colors flex items-center justify-between"
                     style={{
-                      borderColor: showCorrect ? 'var(--accent)' : showWrong ? 'var(--muted)' : 'var(--border)',
-                      background: showCorrect ? 'var(--accent-bg)' : 'var(--paper)',
-                      color: 'var(--ink)',
+                      borderColor: showCorrect ? 'var(--green)' : showWrong ? '#A23B2E' : 'var(--border)',
+                      background: showCorrect ? '#EAF1EE' : showWrong ? '#F9EDEB' : 'var(--paper)',
+                      color: showCorrect ? 'var(--green)' : showWrong ? '#A23B2E' : 'var(--ink)',
+                      fontWeight: showCorrect ? 600 : 400,
                     }}
                   >
-                    {opt}
+                    <span>{opt}</span>
+                    {showCorrect && <span className="text-xs font-semibold">✓ correct</span>}
+                    {showWrong && <span className="text-xs font-semibold">✗</span>}
                   </button>
                 )
               })}
@@ -546,7 +562,7 @@ export default function StepPage() {
             {quizAnswer && (
               <div>
                 <p className="text-sm font-medium mb-1" style={{ color: 'var(--ink)' }}>
-                  {quizAnswer === step.quiz.correct ? 'Exactly right.' : 'Not quite —'}
+                  {quizAnswer === step.quiz.correct ? 'Exactly right.' : 'Not quite.'}
                 </p>
                 <p className="text-sm" style={{ color: 'var(--muted)' }}>
                   {step.quiz.explanation}
