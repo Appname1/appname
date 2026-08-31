@@ -1,8 +1,7 @@
 import { NextResponse } from 'next/server'
-import Groq from 'groq-sdk'
+import { callGroqWithFallback } from '@/lib/groq'
 import { createServerSupabaseClient } from '@/lib/supabase-server'
 
-const groq = new Groq({ apiKey: process.env.GROQ_API_KEY })
 
 const SYSTEM_PROMPT = `You are a patient mentor helping a beginner understand a Python error message.
 
@@ -38,7 +37,7 @@ export async function POST(request: Request) {
 
     const userMessage = 'Error message: ' + error_message + '\n\nCode that caused it: ' + (code || 'Not provided')
 
-    const completion = await groq.chat.completions.create({
+    const completion = await callGroqWithFallback({
       model: 'openai/gpt-oss-120b',
       messages: [
         { role: 'system', content: SYSTEM_PROMPT },

@@ -1,7 +1,6 @@
 import { NextResponse } from 'next/server'
-import Groq from 'groq-sdk'
+import { callGroqWithFallback } from '@/lib/groq'
 
-const groq = new Groq({ apiKey: process.env.GROQ_API_KEY })
 
 const SYSTEM_PROMPT = `You are a warm, patient mentor explaining a dataset to a first-year student who has never worked with data before.
 
@@ -44,7 +43,7 @@ export async function POST(request: Request) {
 
     const userMessage = `Project: ${project_title}\nDomain: ${domain}\nColumns: ${columns.join(', ')}\nSample rows: ${JSON.stringify(sample_rows ?? [])}`
 
-    const completion = await groq.chat.completions.create({
+    const completion = await callGroqWithFallback({
       model: 'openai/gpt-oss-120b',
       messages: [
         { role: 'system', content: SYSTEM_PROMPT },

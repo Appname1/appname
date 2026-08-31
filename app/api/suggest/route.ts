@@ -1,8 +1,6 @@
 import { NextResponse } from 'next/server'
-import Groq from 'groq-sdk'
+import { callGroqWithFallback } from '@/lib/groq'
 import { createServerSupabaseClient } from '@/lib/supabase-server'
-
-const groq = new Groq({ apiKey: process.env.GROQ_API_KEY })
 
 const SYSTEM_PROMPT = `You are a career mentor who designs portfolio-worthy data/AI projects tailored to a specific job description.
 
@@ -101,7 +99,7 @@ export async function POST(request: Request) {
 
     let completion
     try {
-      completion = await groq.chat.completions.create({
+      completion = await callGroqWithFallback({
         model: 'openai/gpt-oss-120b',
         messages: [
           { role: 'system', content: SYSTEM_PROMPT },

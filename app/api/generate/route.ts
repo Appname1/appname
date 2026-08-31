@@ -1,8 +1,7 @@
 import { NextResponse } from 'next/server'
-import Groq from 'groq-sdk'
+import { callGroqWithFallback } from '@/lib/groq'
 import { createServerSupabaseClient } from '@/lib/supabase-server'
 
-const groq = new Groq({ apiKey: process.env.GROQ_API_KEY })
 
 const STEP_COUNTS: Record<string, number> = {
   DA: 8,
@@ -126,7 +125,7 @@ Return ONLY raw JSON, nothing before { and nothing after }.`
 }
 
 async function callGroq(systemPrompt: string, userMessage: string) {
-  const completion = await groq.chat.completions.create({
+  const completion = await callGroqWithFallback({
     model: 'openai/gpt-oss-120b',
     messages: [
       { role: 'system', content: systemPrompt },
