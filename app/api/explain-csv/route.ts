@@ -6,9 +6,9 @@ const SYSTEM_PROMPT = `You are a warm, patient mentor explaining a dataset to a 
 
 You will receive column names, sample rows, a domain, and a project title. Explain what this dataset represents, what each column means, its likely data type, and which columns are useful for the project.
 
-Tone: warm and plain — like a mentor explaining to a first-year student who has never seen data before. Avoid jargon. Avoid sounding robotic or clinical.
+Tone: warm and plain like a mentor explaining to a first-year student who has never seen data before. Avoid jargon. Avoid sounding robotic or clinical.
 
-Return ONLY raw JSON — nothing before { and nothing after }. No markdown. No backticks.
+Return ONLY raw JSON nothing before { and nothing after }. No markdown. No backticks.
 
 Exact JSON structure:
 {
@@ -59,11 +59,13 @@ export async function POST(request: Request) {
     try {
       parsed = JSON.parse(raw)
     } catch {
+      console.error('[/api/explain-csv] JSON.parse failed. Raw Groq output:', raw)
       return NextResponse.json({ error: 'explain_failed', retry: true }, { status: 500 })
     }
 
     return NextResponse.json(parsed)
-  } catch {
+  } catch (err) {
+    console.error('[/api/explain-csv] Unhandled error:', err)
     return NextResponse.json({ error: 'explain_failed', retry: true }, { status: 500 })
   }
 }

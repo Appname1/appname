@@ -1,8 +1,6 @@
 import { NextResponse } from 'next/server'
-import Groq from 'groq-sdk'
+import { callGroqWithFallback } from '@/lib/groq'
 import { createServerSupabaseClient } from '@/lib/supabase-server'
-
-const groq = new Groq({ apiKey: process.env.GROQ_API_KEY })
 
 const SYSTEM_PROMPT = `You are a mentor creating quiz questions about a specific dataset.
 
@@ -10,11 +8,11 @@ You will receive a dataset_deep_dive object (with real column names, meanings, a
 
 Questions must reference the ACTUAL column names from the dataset. Example: "The churn column contains 0 and 1 values. What do they represent?"
 
-Do NOT write generic Python or programming questions — every question must be about the actual dataset content.
+Do NOT write generic Python or programming questions, every question must be about the actual dataset content.
 
-Tone: warm, encouraging, never trick questions.
+Tone: warm, encouraging, never trick questions. Never use em dashes in your output.
 
-Return ONLY raw JSON — nothing before { and nothing after }. No markdown. No backticks.
+Return ONLY raw JSON, nothing before { and nothing after. No markdown. No backticks.
 
 Exact JSON structure:
 {
@@ -72,14 +70,27 @@ export async function POST(request: Request) {
       })
     }
 
-    const completion = await groq.chat.completions.create({
-      model: 'openai/gpt-oss-120b',
-      messages: [
-        { role: 'system', content: SYSTEM_PROMPT },
-        { role: 'user', content: JSON.stringify(datasetDeepDive) },
-      ],
-      max_tokens: 1500,
-    })
+    let completion
+    try {
+      completion = await callGroqWithFallback({
+        model: 'openai/gpt-oss-120b',
+        messages: [
+          { role: 'system', content: SYSTEM_PROMPT },
+          { role: 'user', content: JSON.stringify(datasetDeepDive) },
+        ],
+        max_tokens: 2000,
+      })
+    } catch (groqErr) {
+      console.error('[/api/explain-csv/deep-dive] Groq call failed:', groqErr)
+      const status = (groqErr as { status?: number })?.status
+      if (status === 429) {
+        return NextResponse.json(
+          { error: 'rate_limited', message: 'Our AI provider is at capacity right now. Please try again in a minute.' },
+          { status: 429 }
+        )
+      }
+      return NextResponse.json({ error: 'quiz_failed', retry: true }, { status: 500 })
+    }
 
     let raw = completion.choices[0]?.message?.content ?? ''
     raw = raw.replace(/```json\s*/g, '').replace(/```\s*/g, '').trim()
@@ -88,6 +99,7 @@ export async function POST(request: Request) {
     try {
       parsed = JSON.parse(raw)
     } catch {
+      console.error('[/api/explain-csv/deep-dive] JSON.parse failed. Raw Groq output:', raw)
       return NextResponse.json({ error: 'quiz_failed', retry: true }, { status: 500 })
     }
 
@@ -95,7 +107,8 @@ export async function POST(request: Request) {
       dataset_deep_dive: datasetDeepDive,
       quiz_questions: parsed.quiz_questions,
     })
-  } catch {
+  } catch (err) {
+    console.error('[/api/explain-csv/deep-dive] Unhandled error:', err)
     return NextResponse.json({ error: 'quiz_failed', retry: true }, { status: 500 })
   }
 }
