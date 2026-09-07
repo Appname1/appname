@@ -17,8 +17,8 @@ interface GroqCallParams {
   model: string
   messages: { role: 'system' | 'user'; content: string }[]
   max_tokens: number
+  reasoning_effort?: 'low' | 'medium' | 'high'
 }
-
 /**
  * Calls Groq, automatically retrying with the next available API key if the
  * current one is rate-limited (429). Throws the last error if all keys fail.

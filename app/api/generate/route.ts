@@ -131,7 +131,8 @@ async function callGroq(systemPrompt: string, userMessage: string) {
       { role: 'system', content: systemPrompt },
       { role: 'user', content: userMessage },
     ],
-    max_tokens: 7000,
+    max_tokens: 12000,
+    reasoning_effort: 'low',
   })
 
   let raw = completion.choices[0]?.message?.content ?? ''
