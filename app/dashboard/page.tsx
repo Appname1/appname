@@ -157,14 +157,14 @@ export default async function DashboardPage() {
             className="text-sm font-medium rounded-lg px-4 py-2 border transition-colors"
             style={{ borderColor: 'var(--border)', color: 'var(--ink)', background: 'var(--white)' }}
           >
-            My Projects →
+            My Projects 
           </a>
           <a
             href="/portfolio"
             className="text-sm font-medium rounded-lg px-4 py-2 border transition-colors"
             style={{ borderColor: 'var(--border)', color: 'var(--ink)', background: 'var(--white)' }}
           >
-            Portfolio →
+            Portfolio 
           </a>
         </div>
 
