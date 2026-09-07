@@ -105,7 +105,7 @@ export async function POST(request: Request) {
           { role: 'system', content: SYSTEM_PROMPT },
           { role: 'user', content: userMessage },
         ],
-        max_tokens: 2000,
+        max_tokens: 3500,
       })
     } catch (groqErr) {
       console.error('[/api/suggest] Groq call failed:', groqErr)
