@@ -30,16 +30,24 @@ export async function middleware(request: NextRequest) {
 
   const { data: { user } } = await supabase.auth.getUser()
 
-   // Protect /dashboard and any nested routes under it
+  // Protect /dashboard and any nested routes under it
   if (!user && request.nextUrl.pathname.startsWith('/dashboard')) {
     const redirectUrl = new URL('/login', request.url)
     return NextResponse.redirect(redirectUrl)
   }
 
+  // Gate everything except the landing page and coming-soon itself
+  const isRootPath = request.nextUrl.pathname === '/'
+  const isComingSoonPath = request.nextUrl.pathname === '/coming-soon'
+  const isInternalPath = request.nextUrl.pathname.startsWith('/_next') || request.nextUrl.pathname.startsWith('/api')
+
+  if (!isRootPath && !isComingSoonPath && !isInternalPath) {
+    return NextResponse.redirect(new URL('/coming-soon', request.url))
+  }
 
   return response
 }
 
 export const config = {
-  matcher: ['/dashboard/:path*'],
+  matcher: ['/dashboard/:path*', '/((?!_next|api).*)'],
 }

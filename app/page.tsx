@@ -27,11 +27,11 @@ export default function LandingPage() {
         <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
           <Logo size={28} showWordmark />
           <Link
-            href="/login"
+            href="/coming-soon"
             className="text-sm font-medium rounded-lg px-4 py-2"
             style={{ background: 'var(--ink)', color: 'var(--paper)' }}
           >
-            Log in
+            Join waitlist
           </Link>
         </div>
       </header>
@@ -45,9 +45,9 @@ export default function LandingPage() {
           >
             <span
               className="inline-block text-xs font-semibold rounded-full px-3 py-1 mb-6 w-fit"
-              style={{ background: 'var(--accent-bg)', color: 'var(--accent-dark)' }}
+              style={{ background: 'var(--accent)', color: 'var(--paper)' }}
             >
-              Three ways to start. One real project out.
+              🚀 Launching soon
             </span>
             <h1
               className="text-4xl lg:text-5xl font-bold leading-tight mb-5"
@@ -64,7 +64,7 @@ export default function LandingPage() {
               className="w-fit text-sm font-medium rounded-lg px-6 py-3"
               style={{ background: 'var(--ink)', color: 'var(--paper)' }}
             >
-              Start building free
+              Join the waitlist
             </Link>
           </div>
 
